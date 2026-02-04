@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -29,14 +28,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun SchedulingSummary(actions: Boolean = false) {
+fun BookingSummary(modifier: Modifier, actions: Boolean = false) {
     ElevatedCard(
         elevation = CardDefaults.cardElevation(
             defaultElevation = 6.dp
         ),
-        modifier = Modifier
+        modifier = modifier
             .width(width = 320.dp)
-            .padding(16.dp),
     ) {
         Column (
             modifier = Modifier
@@ -137,6 +135,6 @@ fun CardFooter(actions: Boolean){
 
 @Preview(showBackground = true)
 @Composable
-fun SchedulingSummaryPreview() {
-    SchedulingSummary(true)
+fun BookingSummaryPreview() {
+    BookingSummary(actions = true, modifier = Modifier.padding(16.dp))
 }
