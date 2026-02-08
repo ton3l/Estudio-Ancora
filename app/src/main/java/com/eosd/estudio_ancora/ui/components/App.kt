@@ -19,12 +19,12 @@ fun App() {
         val mod = Modifier
                 .padding(innerPadding)
                 .padding(horizontal = 16.dp, vertical = 32.dp);
-//        BookingForm(
-//            modifier = mod
-//        )
-        BookingLog(
+        BookingForm(
             modifier = mod
         )
+//        BookingLog(
+//            modifier = mod
+//        )
     }
 }
 

@@ -35,6 +35,7 @@ This project uses Gradle to manage dependencies and build the application.
 - **Dependencies:** Dependencies are managed in the `gradle/libs.versions.toml` file.
 - **Compose BOM (Bill of Materials):** This project uses the Compose BOM to manage Jetpack Compose library versions. The BOM ensures that all Compose dependencies are compatible with each other. When using the BOM, you should not specify versions for individual `androidx.compose` libraries in the `libs.versions.toml` file; the BOM handles this automatically. This helps prevent version mismatch errors, such as `NoClassDefFoundError`.
 - **Structure:** The project follows the standard Android application structure with the main application module located in the `app` directory.
+- **Code Cleanup:** Do not perform automatic code cleanup (e.g., removing unused imports, reformatting) unless explicitly requested by the user. If a need for cleanup is identified, alert the user instead of applying changes.
 
 ## Ask Context
 - When I ask for "explain mode", "ask mode", "chat mode", or similar things, **I only want explanations**, not code changes. Use this section to get some context about me before answering.
