@@ -12,7 +12,6 @@ import com.eosd.estudio_ancora.ui.theme.Estudio_ancoraTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContent {
             Estudio_ancoraTheme {
                 App()

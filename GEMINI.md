@@ -38,6 +38,7 @@ This project uses Gradle to manage dependencies and build the application.
 - **Code Cleanup:** Do not perform automatic code cleanup (e.g., removing unused imports, reformatting) unless explicitly requested by the user. If a need for cleanup is identified, alert the user instead of applying changes.
 
 ## Ask Context
-- When I ask for "explain mode", "ask mode", "chat mode", or similar things, **I only want explanations**, not code changes. Use this section to get some context about me before answering.
+- **Explications Always:** I am new to Android development and I want to learn. Therefore, **always provide explanations** of what is being done and why, even when performing code modifications or in "edit mode".
+- **Specific Modes:** When I ask for "explain mode", "ask mode", or "chat mode" (or similar things), I only want explanations/discussion without any code changes.
 
 I'm new to Android development and to the Android ecosystem (Gradle, Compose, Material, etc.). This is my first real project using these technologies, and I want to learn and understand what I'm doing.

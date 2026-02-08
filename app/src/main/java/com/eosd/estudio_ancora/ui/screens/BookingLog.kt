@@ -21,7 +21,7 @@ fun BookingLog(modifier: Modifier) {
             .fillMaxWidth()
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(32.dp),
+        verticalArrangement = Arrangement.spacedBy(24.dp),
     ) {
         BookingSummary(modifier = Modifier, actions = true)
         BookingSummary(modifier = Modifier, actions = true)
