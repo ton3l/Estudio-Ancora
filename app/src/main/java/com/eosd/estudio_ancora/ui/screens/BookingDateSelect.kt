@@ -14,6 +14,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import com.eosd.estudio_ancora.ui.components.Routes
 import com.kizitonwose.calendar.compose.VerticalCalendar
 import com.kizitonwose.calendar.compose.rememberCalendarState
 import com.kizitonwose.calendar.core.CalendarDay
@@ -30,14 +34,19 @@ import java.util.*
 @Composable
 fun BookingDateSelect(
     paddingValues: PaddingValues = PaddingValues(),
+    navController: NavController,
     onBackPressed: () -> Unit = {}
 ) {
     var selection by remember { mutableStateOf<LocalDate?>(null) }
+    val sheetState = rememberModalBottomSheetState()
+    val scope = rememberCoroutineScope()
+    var showBottomSheet by remember { mutableStateOf(false) }
+
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Escolha a Data e Hora") },
+                title = { Text("Escolha a Data") },
                 modifier = Modifier
                     .padding(top = paddingValues.calculateTopPadding())
             )
@@ -60,7 +69,6 @@ fun BookingDateSelect(
                 firstDayOfWeek = firstDayOfWeek
             )
 
-            // Cabeçalho fixo com os dias da semana (Dom, Seg, etc.)
             DaysOfWeekTitle(daysOfWeek = remember { daysOfWeekFromLocale(firstDayOfWeek) })
 
             VerticalCalendar(
@@ -68,6 +76,7 @@ fun BookingDateSelect(
                 dayContent = { day ->
                     Day(day, isSelected = selection == day.date) {
                         selection = if (selection == it.date) null else it.date
+                        showBottomSheet = true
                     }
                 },
                 monthHeader = { month ->
@@ -75,6 +84,51 @@ fun BookingDateSelect(
                 },
                 modifier = Modifier.fillMaxSize()
             )
+
+            if (showBottomSheet) {
+                ModalBottomSheet(
+                    onDismissRequest = {
+                        showBottomSheet = false
+                    },
+                    sheetState = sheetState
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .padding(horizontal = 32.dp, vertical = 8.dp)
+                            .padding(bottom = 16.dp),
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
+
+                    ) {
+                        Text(
+                            text = "Escolha o Horário",
+                            fontSize = 24.sp,
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                        )
+                        for (i in 13..20) {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clickable(
+                                        onClick = {
+                                            navController.navigate(Routes.BOOKING_FORM)
+                                        }
+                                    )
+                                    .height(30.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    text = i.toString(),
+                                    fontWeight = FontWeight.Medium,
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(horizontal = 4.dp)
+                                )
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }
@@ -150,5 +204,5 @@ fun Day(day: CalendarDay, isSelected: Boolean, onClick: (CalendarDay) -> Unit) {
 @Preview(showBackground = true)
 @Composable
 fun BookingDateSelectPreview() {
-    BookingDateSelect(onBackPressed = {})
+    BookingDateSelect(onBackPressed = {}, navController = rememberNavController())
 }

@@ -26,10 +26,13 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.eosd.estudio_ancora.ui.components.BookingSummary
+import com.eosd.estudio_ancora.ui.components.Routes
 
 @Composable
-fun BookingForm(modifier: Modifier){
+fun BookingForm(modifier: Modifier, navController: NavController){
     Column(
         modifier = modifier
             .fillMaxWidth(),
@@ -52,7 +55,9 @@ fun BookingForm(modifier: Modifier){
                 .padding(vertical = 16.dp)
         )
         Button(
-            onClick = { false },
+            onClick = {
+                navController.navigate(Routes.BOOKING_LOG)
+            },
             modifier = Modifier,
             shape = RoundedCornerShape(6.dp),
             colors = ButtonDefaults.buttonColors(
@@ -113,5 +118,5 @@ fun SelectService() {
 @Preview(showBackground = true)
 @Composable
 fun BookingFormPreview() {
-    BookingForm(modifier = Modifier)
+    BookingForm(modifier = Modifier, navController = rememberNavController())
 }

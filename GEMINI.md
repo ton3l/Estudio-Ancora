@@ -40,5 +40,6 @@ This project uses Gradle to manage dependencies and build the application.
 ## Ask Context
 - **Explications Always:** I am new to Android development and I want to learn. Therefore, **always provide explanations** of what is being done and why, even when performing code modifications or in "edit mode".
 - **Specific Modes:** When I ask for "explain mode", "ask mode", or "chat mode" (or similar things), I only want explanations/discussion without any code changes.
+- **Concise Execution:** If I have already requested a plan for an action and am now asking for its execution, deep explanations are not necessary; just state which step is being performed.
 
 I'm new to Android development and to the Android ecosystem (Gradle, Compose, Material, etc.). This is my first real project using these technologies, and I want to learn and understand what I'm doing.

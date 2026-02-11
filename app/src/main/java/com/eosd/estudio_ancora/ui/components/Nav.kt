@@ -15,18 +15,23 @@ import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
 
 @Composable
-fun Nav(modifier: Modifier = Modifier) {
-    var selectedIndex by remember { mutableIntStateOf(0) }
-    val options = listOf("Calendar", "BookingList")
+fun Nav(navController: NavController, modifier: Modifier = Modifier) {
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
+
+    val options = listOf(
+        Routes.CALENDAR to Icons.Default.CalendarMonth,
+        Routes.BOOKING_LOG to Icons.Default.Menu
+    )
 
     Surface (
         shadowElevation = 2.dp,
@@ -37,26 +42,30 @@ fun Nav(modifier: Modifier = Modifier) {
             modifier = Modifier
                 .height(56.dp)
         ) {
-            options.forEachIndexed { index, label ->
+            options.forEachIndexed { index, (route, icon) ->
                 SegmentedButton(
                     shape = SegmentedButtonDefaults.itemShape(
                         index = index,
                         count = options.size,
                     ),
-                    onClick = { selectedIndex = index },
-                    selected = index == selectedIndex,
-                    label = {
-                        when (label) {
-                            "Calendar" -> Icon(
-                                imageVector = Icons.Default.CalendarMonth,
-                                contentDescription = "Calendar"
-                            )
-
-                            "BookingList" -> Icon(
-                                imageVector = Icons.Default.Menu,
-                                contentDescription = "Menu"
-                            )
+                    onClick = {
+                        if (currentRoute != route) {
+                            navController.navigate(route) {
+                                // Evita empilhar a mesma tela várias vezes
+                                popUpTo(navController.graph.startDestinationId) {
+                                    saveState = true
+                                }
+                                launchSingleTop = true
+                                restoreState = true
+                            }
                         }
+                    },
+                    selected = currentRoute == route,
+                    label = {
+                        Icon(
+                            imageVector = icon,
+                            contentDescription = route
+                        )
                     },
                     icon = {},
                     colors = SegmentedButtonDefaults.colors(
@@ -76,5 +85,5 @@ fun Nav(modifier: Modifier = Modifier) {
 @Preview(showBackground = true)
 @Composable
 fun NavPreview() {
-    Nav(Modifier.padding(16.dp))
+    Nav(rememberNavController(), Modifier.padding(16.dp))
 }
