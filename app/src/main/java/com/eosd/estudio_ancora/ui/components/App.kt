@@ -85,8 +85,8 @@ fun App() {
             composable(Routes.BOOKING_FORM) {
                 BookingForm(
                     modifier = Modifier
-                        .padding(innerPadding)
-                        .padding(horizontal = 16.dp, vertical = 32.dp),
+                        .padding(top = innerPadding.calculateTopPadding())
+                        .padding(horizontal = 16.dp, vertical = 16.dp),
                     navController = navController
                 )
             }

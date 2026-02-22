@@ -58,8 +58,8 @@ fun BookingDateSelect(
                 .padding(innerPadding)
         ) {
             val currentMonth = remember { YearMonth.now() }
-            val startMonth = remember { currentMonth.minusMonths(12) }
-            val endMonth = remember { currentMonth.plusMonths(12) }
+            val startMonth = remember { currentMonth.minusMonths(0) }
+            val endMonth = remember { currentMonth.plusMonths(6) }
             val firstDayOfWeek = remember { firstDayOfWeekFromLocale() }
 
             val state = rememberCalendarState(
@@ -86,48 +86,7 @@ fun BookingDateSelect(
             )
 
             if (showBottomSheet) {
-                ModalBottomSheet(
-                    onDismissRequest = {
-                        showBottomSheet = false
-                    },
-                    sheetState = sheetState
-                ) {
-                    Column(
-                        modifier = Modifier
-                            .padding(horizontal = 32.dp, vertical = 8.dp)
-                            .padding(bottom = 16.dp),
-                        verticalArrangement = Arrangement.spacedBy(16.dp)
-
-                    ) {
-                        Text(
-                            text = "Escolha o Horário",
-                            fontSize = 24.sp,
-                            modifier = Modifier
-                                .fillMaxWidth(),
-                        )
-                        for (i in 13..20) {
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clickable(
-                                        onClick = {
-                                            navController.navigate(Routes.BOOKING_FORM)
-                                        }
-                                    )
-                                    .height(30.dp),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text(
-                                    text = i.toString(),
-                                    fontWeight = FontWeight.Medium,
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(horizontal = 4.dp)
-                                )
-                            }
-                        }
-                    }
-                }
+                TimeSelect(navController = navController, sheetState = sheetState) { showBottomSheet = false }
             }
         }
     }
@@ -198,6 +157,53 @@ fun Day(day: CalendarDay, isSelected: Boolean, onClick: (CalendarDay) -> Unit) {
                 else -> MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f)
             }
         )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun TimeSelect(navController: NavController, sheetState: SheetState, onDismiss: () -> Unit){
+    ModalBottomSheet(
+        onDismissRequest = {
+            onDismiss()
+        },
+        sheetState = sheetState
+    ) {
+        Column(
+            modifier = Modifier
+                .padding(horizontal = 32.dp, vertical = 8.dp)
+                .padding(bottom = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+
+        ) {
+            Text(
+                text = "Escolha o Horário",
+                fontSize = 24.sp,
+                modifier = Modifier
+                    .fillMaxWidth(),
+            )
+            for (i in 13..20) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable(
+                            onClick = {
+                                navController.navigate(Routes.BOOKING_FORM)
+                            }
+                        )
+                        .height(30.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = i.toString(),
+                        fontWeight = FontWeight.Medium,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 4.dp)
+                    )
+                }
+            }
+        }
     }
 }
 

@@ -36,7 +36,7 @@ fun BookingSummary(modifier: Modifier, actions: Boolean = false) {
         modifier = modifier
             .width(width = 320.dp)
     ) {
-        Column (
+        Column(
             modifier = Modifier
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -81,7 +81,7 @@ fun CardHeader(actions: Boolean) {
             modifier = if (!actions) Modifier
                 .alpha(0f)
             else Modifier
-                .size( size = 26.dp ) ,
+                .size(size = 26.dp),
             imageVector = Icons.Filled.Close,
             contentDescription = "Apagar agendamento"
         )
@@ -89,24 +89,36 @@ fun CardHeader(actions: Boolean) {
 }
 
 @Composable
-fun CardBody(){
+fun CardBody() {
+    val clientName = "Nome do Cliente"
+    val clientContact = "(xx) xxxxx-xxxx"
+    val serviceName = "Serviço"
     Column(
-        verticalArrangement = Arrangement.spacedBy(4.dp)
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
+        Column(
+            verticalArrangement = Arrangement.spacedBy(1.dp)
+        ) {
+            Text(
+                text = clientName,
+                textAlign = TextAlign.Center,
+                fontSize = 14.sp
+            )
+            Text(
+                text = clientContact,
+                textAlign = TextAlign.Center,
+                fontSize = 12.sp
+            )
+        }
         Text(
-            text = "Nome do Cliente",
-            textAlign = TextAlign.Center,
-            fontSize = 14.sp
-        )
-        Text(
-            text = "Serviço",
+            text = serviceName,
             textAlign = TextAlign.Center,
         )
     }
 }
 
 @Composable
-fun CardFooter(actions: Boolean){
+fun CardFooter(actions: Boolean) {
     Row(
         modifier = Modifier
             .fillMaxWidth(),

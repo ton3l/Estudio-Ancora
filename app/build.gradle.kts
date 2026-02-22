@@ -56,6 +56,8 @@ dependencies {
     implementation(libs.androidx.compose.material.icons.extended)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.kizitonwose.calendar.compose)
+    implementation(libs.androidx.ui.text)
+    implementation(libs.androidx.foundation)
     coreLibraryDesugaring(libs.desugar.jdk.libs)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
