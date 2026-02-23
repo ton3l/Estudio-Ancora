@@ -2,11 +2,20 @@
 
 ## Project Overview
 
-This is an Android application named "Estudio Ancora" with the package name `com.eosd.estudio_ancora`. It is built using Kotlin and Jetpack Compose, which indicates a modern Android development approach. The project follows a standard Gradle structure for Android apps.
+This is an Android application named "Estudio Ancora" with the package name `com.eosd.estudio_ancora`. It is a schedule management app for a small barbershop, built using Kotlin and Jetpack Compose. The project follows a standard Gradle structure for Android apps.
 
 - **Project Name:** estudio_ancora
 - **Package Name:** com.eosd.estudio_ancora
 - **Main Activity:** `com.eosd.estudio_ancora.MainActivity`
+- **Purpose:** Schedule management for a small barbershop.
+
+## Constraints
+
+- **Firebase Spark Plan:** The application must be designed and implemented to stay strictly within the limits of the Firebase Spark (free) plan. Avoid features or data structures that would necessitate the Blaze (pay-as-you-go) plan.
+
+## Documentation
+
+- **Location:** Project documentation can be found in the `docs/` directory.
 
 ## Building and Running
 
