@@ -7,7 +7,14 @@ This is an Android application named "Estudio Ancora" with the package name `com
 - **Project Name:** estudio_ancora
 - **Package Name:** com.eosd.estudio_ancora
 - **Main Activity:** `com.eosd.estudio_ancora.MainActivity`
-- **Purpose:** Schedule management for a small barbershop.
+## Architecture (Modified MVC)
+
+The project follows a modified MVC pattern tailored for Jetpack Compose:
+
+- **Domain:** Pure Kotlin classes representing the business entities (e.g., `Booking`, `Service`).
+- **Models:** Responsible for data access, Firestore connections, and mapping Firestore documents (`Document` classes) to `Domain` entities.
+- **Services:** Implement the business logic and use cases of the application, acting as an orchestration layer between Models and Views.
+- **Views & Controllers:** UI components (Composables) represent the **View**. `ViewModels` act as the **Controllers**, managing UI state and interacting with the Services.
 
 ## Constraints
 

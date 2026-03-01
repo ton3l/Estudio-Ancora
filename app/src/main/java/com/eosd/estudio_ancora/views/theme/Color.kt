@@ -1,4 +1,4 @@
-package com.eosd.estudio_ancora.ui.theme
+package com.eosd.estudio_ancora.views.theme
 
 import androidx.compose.ui.graphics.Color
 

@@ -1,4 +1,4 @@
-package com.eosd.estudio_ancora.ui.components
+package com.eosd.estudio_ancora.views.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -72,7 +72,7 @@ fun PhoneNumberField(modifier: Modifier = Modifier) {
                 stripped
             }
         },
-        label = { Text("Número de telefone") },
+        label = { Text("Número de Telefone") },
         visualTransformation = BrPhoneNumberVisualTransformation(),
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
     )

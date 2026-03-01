@@ -1,4 +1,4 @@
-package com.eosd.estudio_ancora.ui.components
+package com.eosd.estudio_ancora.views.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement

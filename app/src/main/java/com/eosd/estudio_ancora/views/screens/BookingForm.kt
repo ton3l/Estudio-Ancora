@@ -1,4 +1,4 @@
-package com.eosd.estudio_ancora.ui.screens
+package com.eosd.estudio_ancora.views.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -27,19 +26,13 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.OffsetMapping
-import androidx.compose.ui.text.input.TransformedText
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.eosd.estudio_ancora.ui.components.BookingSummary
-import com.eosd.estudio_ancora.ui.components.PhoneNumberField
-import com.eosd.estudio_ancora.ui.components.Routes
+import com.eosd.estudio_ancora.views.components.BookingSummary
+import com.eosd.estudio_ancora.views.components.PhoneNumberField
+import com.eosd.estudio_ancora.views.components.Routes
 
 @Composable
 fun BookingForm(modifier: Modifier, navController: NavController) {

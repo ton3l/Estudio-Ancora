@@ -1,4 +1,4 @@
-package com.eosd.estudio_ancora.ui.components
+package com.eosd.estudio_ancora.views.components
 
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -16,9 +16,9 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.eosd.estudio_ancora.ui.screens.BookingDateSelect
-import com.eosd.estudio_ancora.ui.screens.BookingForm
-import com.eosd.estudio_ancora.ui.screens.BookingLog
+import com.eosd.estudio_ancora.views.screens.BookingDateSelect
+import com.eosd.estudio_ancora.views.screens.BookingForm
+import com.eosd.estudio_ancora.views.screens.BookingLog
 
 object Routes {
     const val CALENDAR = "calendar"

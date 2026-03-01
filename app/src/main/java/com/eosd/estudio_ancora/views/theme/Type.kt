@@ -1,4 +1,4 @@
-package com.eosd.estudio_ancora.ui.theme
+package com.eosd.estudio_ancora.views.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

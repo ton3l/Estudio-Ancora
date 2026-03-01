@@ -1,4 +1,4 @@
-package com.eosd.estudio_ancora.ui.screens
+package com.eosd.estudio_ancora.views.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.eosd.estudio_ancora.ui.components.Routes
+import com.eosd.estudio_ancora.views.components.Routes
 import com.kizitonwose.calendar.compose.VerticalCalendar
 import com.kizitonwose.calendar.compose.rememberCalendarState
 import com.kizitonwose.calendar.core.CalendarDay
