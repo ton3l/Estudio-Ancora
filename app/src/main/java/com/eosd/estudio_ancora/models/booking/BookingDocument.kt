@@ -13,10 +13,10 @@ import java.util.Date
 @Keep
 data class BookingDocument(
     @DocumentId
-    val id: String = "",
-    val customer: String = "",
+    val id: String = "undefined",
+    val customer: String = "undefined",
     val dateTime: Timestamp = Timestamp(seconds = 0, nanoseconds = 0),
-    val phoneNumber: String = "",
+    val phoneNumber: String = "undefined",
     val service: ServiceDocument = ServiceDocument()
 ) {
     fun toEntity(): Booking {

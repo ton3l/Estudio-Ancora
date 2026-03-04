@@ -39,16 +39,14 @@ fun BookingDateSelect(
 ) {
     var selection by remember { mutableStateOf<LocalDate?>(null) }
     val sheetState = rememberModalBottomSheetState()
-    val scope = rememberCoroutineScope()
     var showBottomSheet by remember { mutableStateOf(false) }
-
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text("Escolha a Data") },
                 modifier = Modifier
-                    .padding(top = paddingValues.calculateTopPadding())
+                    .padding(top = paddingValues.calculateTopPadding() - 24.dp)
             )
         }
     ) { innerPadding ->
@@ -61,6 +59,7 @@ fun BookingDateSelect(
             val startMonth = remember { currentMonth.minusMonths(0) }
             val endMonth = remember { currentMonth.plusMonths(6) }
             val firstDayOfWeek = remember { firstDayOfWeekFromLocale() }
+            val today = remember { LocalDate.now() }
 
             val state = rememberCalendarState(
                 startMonth = startMonth,
@@ -74,7 +73,7 @@ fun BookingDateSelect(
             VerticalCalendar(
                 state = state,
                 dayContent = { day ->
-                    Day(day, isSelected = selection == day.date) {
+                    Day(day, isSelected = selection == day.date, today = today) {
                         selection = if (selection == it.date) null else it.date
                         showBottomSheet = true
                     }
@@ -86,7 +85,10 @@ fun BookingDateSelect(
             )
 
             if (showBottomSheet) {
-                TimeSelect(navController = navController, sheetState = sheetState) { showBottomSheet = false }
+                TimeSelect(
+                    navController = navController,
+                    sheetState = sheetState
+                ) { showBottomSheet = false }
             }
         }
     }
@@ -136,7 +138,8 @@ fun daysOfWeekFromLocale(firstDayOfWeek: DayOfWeek): List<DayOfWeek> {
 }
 
 @Composable
-fun Day(day: CalendarDay, isSelected: Boolean, onClick: (CalendarDay) -> Unit) {
+fun Day(day: CalendarDay, isSelected: Boolean, today: LocalDate, onClick: (CalendarDay) -> Unit) {
+    val isBeforeToday = day.date.isBefore(today)
     Box(
         modifier = Modifier
             .aspectRatio(1f)
@@ -144,7 +147,7 @@ fun Day(day: CalendarDay, isSelected: Boolean, onClick: (CalendarDay) -> Unit) {
             .clip(CircleShape)
             .background(color = if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent)
             .clickable(
-                enabled = day.position == DayPosition.MonthDate,
+                enabled = day.position == DayPosition.MonthDate && !isBeforeToday,
                 onClick = { onClick(day) }
             ),
         contentAlignment = Alignment.Center
@@ -153,6 +156,7 @@ fun Day(day: CalendarDay, isSelected: Boolean, onClick: (CalendarDay) -> Unit) {
             text = day.date.dayOfMonth.toString(),
             color = when {
                 isSelected -> MaterialTheme.colorScheme.onPrimary
+                isBeforeToday -> MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f)
                 day.position == DayPosition.MonthDate -> MaterialTheme.colorScheme.onSurface
                 else -> MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f)
             }
@@ -162,7 +166,7 @@ fun Day(day: CalendarDay, isSelected: Boolean, onClick: (CalendarDay) -> Unit) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TimeSelect(navController: NavController, sheetState: SheetState, onDismiss: () -> Unit){
+fun TimeSelect(navController: NavController, sheetState: SheetState, onDismiss: () -> Unit) {
     ModalBottomSheet(
         onDismissRequest = {
             onDismiss()
@@ -182,7 +186,7 @@ fun TimeSelect(navController: NavController, sheetState: SheetState, onDismiss: 
                 modifier = Modifier
                     .fillMaxWidth(),
             )
-            for (i in 13..20) {
+            for (i in 13..20) { // Horários disponíveis
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()

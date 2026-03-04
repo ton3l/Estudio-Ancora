@@ -65,7 +65,6 @@ fun App() {
             popExitTransition = {
                 slideOutHorizontally(targetOffsetX = { it }) + fadeOut()
             }
-
         ) {
             composable(Routes.CALENDAR) {
                 BookingDateSelect(

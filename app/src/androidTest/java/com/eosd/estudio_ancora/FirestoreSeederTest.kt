@@ -30,19 +30,21 @@ class FirestoreSeederTest {
         ids.forEach { weekDay ->
             val data = hashMapOf(
                 "open" to true,
-                "8" to false,
-                "9" to false,
-                "10" to false,
-                "11" to false,
-                "12" to false,
-                "13" to false,
-                "14" to false,
-                "15" to false,
-                "16" to false,
-                "17" to false,
-                "18" to false,
-                "19" to false,
-                "20" to false
+                "timeSlots" to hashMapOf(
+                    "8" to false,
+                    "9" to false,
+                    "10" to false,
+                    "11" to false,
+                    "12" to false,
+                    "13" to false,
+                    "14" to false,
+                    "15" to false,
+                    "16" to false,
+                    "17" to false,
+                    "18" to false,
+                    "19" to false,
+                    "20" to false
+                )
             )
 
             try {

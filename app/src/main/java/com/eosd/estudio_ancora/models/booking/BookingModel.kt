@@ -6,10 +6,12 @@ import com.google.firebase.firestore.DocumentReference
 import kotlinx.coroutines.tasks.await
 
 object BookingModel {
+    private val bookingCollection = firestore.collection("bookings")
+
     suspend fun addBooking (booking: Booking): DocumentReference {
         val data = BookingDocument.toDocument(booking)
 
-        val document = firestore.collection("bookings")
+        val document = bookingCollection
             .add(data)
             .await()
 
