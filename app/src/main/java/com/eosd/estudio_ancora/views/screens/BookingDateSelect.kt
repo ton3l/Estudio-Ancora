@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -15,9 +16,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.eosd.estudio_ancora.views.components.Routes
+import com.eosd.estudio_ancora.views.viewModels.BookingDateSelectViewModel
+import com.eosd.estudio_ancora.views.viewModels.states.AvailableTimesState
 import com.kizitonwose.calendar.compose.VerticalCalendar
 import com.kizitonwose.calendar.compose.rememberCalendarState
 import com.kizitonwose.calendar.core.CalendarDay
@@ -35,11 +40,13 @@ import java.util.*
 fun BookingDateSelect(
     paddingValues: PaddingValues = PaddingValues(),
     navController: NavController,
+    viewModel: BookingDateSelectViewModel = viewModel(),
     onBackPressed: () -> Unit = {}
 ) {
-    var selection by remember { mutableStateOf<LocalDate?>(null) }
+    val selectedDay by viewModel.selectedDay.collectAsStateWithLifecycle()
+    val currentDayAvailableTimes by viewModel.currentDayAvailableTimes.collectAsStateWithLifecycle()
     val sheetState = rememberModalBottomSheetState()
-    var showBottomSheet by remember { mutableStateOf(false) }
+    var showBottomSheet by rememberSaveable { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -73,8 +80,8 @@ fun BookingDateSelect(
             VerticalCalendar(
                 state = state,
                 dayContent = { day ->
-                    Day(day, isSelected = selection == day.date, today = today) {
-                        selection = if (selection == it.date) null else it.date
+                    Day(day, isSelected = (selectedDay == day.date), today = today) {
+                        viewModel.onDaySelected(day.date)
                         showBottomSheet = true
                     }
                 },
@@ -84,12 +91,12 @@ fun BookingDateSelect(
                 modifier = Modifier.fillMaxSize()
             )
 
-            if (showBottomSheet) {
+            if (showBottomSheet)
                 TimeSelect(
                     navController = navController,
-                    sheetState = sheetState
+                    sheetState = sheetState,
+                    availableTimesState = currentDayAvailableTimes
                 ) { showBottomSheet = false }
-            }
         }
     }
 }
@@ -132,7 +139,7 @@ fun DaysOfWeekTitle(daysOfWeek: List<DayOfWeek>) {
 }
 
 fun daysOfWeekFromLocale(firstDayOfWeek: DayOfWeek): List<DayOfWeek> {
-    val daysOfWeek = DayOfWeek.values()
+    val daysOfWeek = DayOfWeek.entries.toTypedArray()
     return daysOfWeek.slice(firstDayOfWeek.ordinal until daysOfWeek.size) +
             daysOfWeek.slice(0 until firstDayOfWeek.ordinal)
 }
@@ -166,7 +173,12 @@ fun Day(day: CalendarDay, isSelected: Boolean, today: LocalDate, onClick: (Calen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TimeSelect(navController: NavController, sheetState: SheetState, onDismiss: () -> Unit) {
+fun TimeSelect(
+    navController: NavController,
+    sheetState: SheetState,
+    availableTimesState: AvailableTimesState,
+    onDismiss: () -> Unit
+) {
     ModalBottomSheet(
         onDismissRequest = {
             onDismiss()
@@ -186,25 +198,54 @@ fun TimeSelect(navController: NavController, sheetState: SheetState, onDismiss: 
                 modifier = Modifier
                     .fillMaxWidth(),
             )
-            for (i in 13..20) { // Horários disponíveis
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable(
-                            onClick = {
-                                navController.navigate(Routes.BOOKING_FORM)
-                            }
-                        )
-                        .height(30.dp),
-                    contentAlignment = Alignment.Center
-                ) {
+            when (availableTimesState) {
+                is AvailableTimesState.Error -> {
                     Text(
-                        text = i.toString(),
-                        fontWeight = FontWeight.Medium,
+                        text = "Ocorreu um erro ao buscar os horários disponíveis, verifique sua internet e tente novamente.",
+                        fontSize = 16.sp,
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 4.dp)
+                            .fillMaxWidth(),
                     )
+                }
+
+                is AvailableTimesState.Loading -> {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator(
+                            modifier = Modifier
+                                .width(64.dp)
+                                .padding(16.dp),
+                            color = MaterialTheme.colorScheme.secondary,
+                            trackColor = MaterialTheme.colorScheme.surfaceVariant,
+                        )
+                    }
+                }
+
+                is AvailableTimesState.Success -> {
+                    for (time in availableTimesState.availableTimes) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable(
+                                    onClick = {
+                                        navController.navigate(Routes.BOOKING_FORM)
+                                    }
+                                )
+                                .height(30.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = "${time.hour}",
+                                fontWeight = FontWeight.Medium,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 4.dp)
+                            )
+                        }
+                    }
                 }
             }
         }
@@ -214,5 +255,5 @@ fun TimeSelect(navController: NavController, sheetState: SheetState, onDismiss: 
 @Preview(showBackground = true)
 @Composable
 fun BookingDateSelectPreview() {
-    BookingDateSelect(onBackPressed = {}, navController = rememberNavController())
+    BookingDateSelect(navController = rememberNavController())
 }

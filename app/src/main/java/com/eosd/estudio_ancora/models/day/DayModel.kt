@@ -21,18 +21,22 @@ object DayModel {
 
         if( dbDay.exists() ) {
             val dayDocument = dbDay.toObject<DayDocument>()!!
-            val dayAvailableTimes = dayDocument.toEntity().component2()
+            val day = dayDocument.toEntity()
 
+            if ( !day.open ) return emptyList()
+
+            val dayAvailableTimes = day.component2()
             return dayAvailableTimes
         }
 
-        val dayAvailableTimes = weekAvailableTimesCollection
-            .document(date.dayOfWeek.toString())
+        val weekDay = weekAvailableTimesCollection
+            .document(date.dayOfWeek.toString().lowercase())
             .get()
             .await()
             .toObject<WeekDayAvailableTimes>()!!
-            .getTimeSlotEntities()
 
-        return dayAvailableTimes
+        if ( !weekDay.open ) return emptyList()
+
+        return weekDay.getTimeSlotEntities()
     }
 }
