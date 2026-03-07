@@ -70,7 +70,7 @@ fun App() {
                 BookingDateSelect(
                     paddingValues = innerPadding,
                     onBackPressed = { navController.popBackStack() },
-                    navController = navController
+                    onDateTimeSelected = { navController.navigate(Routes.BOOKING_FORM) }
                 )
             }
             composable(Routes.BOOKING_LOG) {
