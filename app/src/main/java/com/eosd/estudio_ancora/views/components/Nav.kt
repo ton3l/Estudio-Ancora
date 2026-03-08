@@ -20,16 +20,18 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 
 @Composable
 fun Nav(navController: NavController, modifier: Modifier = Modifier) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentRoute = navBackStackEntry?.destination?.route
+    val currentDestination = navBackStackEntry?.destination
 
     val options = listOf(
-        Routes.CALENDAR to Icons.Default.CalendarMonth,
+        Routes.BOOKING_FLOW to Icons.Default.CalendarMonth,
         Routes.BOOKING_LOG to Icons.Default.Menu
     )
 
@@ -43,24 +45,28 @@ fun Nav(navController: NavController, modifier: Modifier = Modifier) {
                 .height(56.dp)
         ) {
             options.forEachIndexed { index, (route, icon) ->
+                val selected = currentDestination?.hierarchy?.any { it.route == route } == true
+                
                 SegmentedButton(
                     shape = SegmentedButtonDefaults.itemShape(
                         index = index,
                         count = options.size,
                     ),
                     onClick = {
-                        if (currentRoute != route) {
+                        if (!selected) {
                             navController.navigate(route) {
-                                // Evita empilhar a mesma tela várias vezes
-                                popUpTo(navController.graph.startDestinationId) {
+                                // Volta para o destino inicial do grafo para evitar acúmulo de telas
+                                popUpTo(navController.graph.findStartDestination().id) {
                                     saveState = true
                                 }
+                                // Evita múltiplas instâncias da mesma tela
                                 launchSingleTop = true
+                                // Restaura o estado anterior (ex: se estava no formulário, volta para o formulário)
                                 restoreState = true
                             }
                         }
                     },
-                    selected = currentRoute == route,
+                    selected = selected,
                     label = {
                         Icon(
                             imageVector = icon,

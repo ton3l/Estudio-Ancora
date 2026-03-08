@@ -28,14 +28,24 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.eosd.estudio_ancora.views.components.BookingSummary
 import com.eosd.estudio_ancora.views.components.PhoneNumberField
 import com.eosd.estudio_ancora.views.components.Routes
+import com.eosd.estudio_ancora.views.viewModels.BookingViewModel
 
 @Composable
-fun BookingForm(modifier: Modifier, navController: NavController) {
+fun BookingForm(
+    modifier: Modifier,
+    viewModel: BookingViewModel = viewModel(),
+    onServiceBooked: () -> Unit = {},
+) {
+    val selectedDate = viewModel.selectedDay.collectAsStateWithLifecycle()
+    val selectedTime = viewModel.selectedTime.collectAsStateWithLifecycle()
+
     Surface(
         modifier = Modifier
             .fillMaxSize()
@@ -60,11 +70,12 @@ fun BookingForm(modifier: Modifier, navController: NavController) {
             BookingSummary(
                 actions = false,
                 modifier = Modifier
-                    .padding(vertical = 16.dp)
+                    .padding(vertical = 16.dp),
+                bookingDateTime = selectedDate.value!!.atTime(selectedTime.value!!)
             )
             Button(
                 onClick = {
-                    navController.navigate(Routes.BOOKING_LOG)
+                    onServiceBooked()
                 },
                 modifier = Modifier,
                 shape = RoundedCornerShape(6.dp),
@@ -128,5 +139,5 @@ fun SelectService() {
 @Preview(showBackground = true)
 @Composable
 fun BookingFormPreview() {
-    BookingForm(modifier = Modifier, navController = rememberNavController())
+    BookingForm(modifier = Modifier)
 }

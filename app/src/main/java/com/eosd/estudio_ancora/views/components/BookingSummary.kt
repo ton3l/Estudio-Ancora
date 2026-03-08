@@ -26,9 +26,16 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 @Composable
-fun BookingSummary(modifier: Modifier, actions: Boolean = false) {
+fun BookingSummary(
+    modifier: Modifier,
+    actions: Boolean = false,
+    bookingDateTime: LocalDateTime = LocalDateTime.of(1000, 12, 1, 0, 0)
+) {
     ElevatedCard(
         elevation = CardDefaults.cardElevation(
             defaultElevation = 6.dp
@@ -41,7 +48,7 @@ fun BookingSummary(modifier: Modifier, actions: Boolean = false) {
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            CardHeader(actions)
+            CardHeader(actions, bookingDateTime)
             CardBody()
             CardFooter(actions)
         }
@@ -49,7 +56,9 @@ fun BookingSummary(modifier: Modifier, actions: Boolean = false) {
 }
 
 @Composable
-fun CardHeader(actions: Boolean) {
+fun CardHeader(actions: Boolean, bookingDateTime: LocalDateTime) {
+    val ( dateText, timeText ) = dateTimeFormatter(bookingDateTime)
+
     Row(
         modifier = Modifier
             .fillMaxWidth(),
@@ -58,7 +67,7 @@ fun CardHeader(actions: Boolean) {
     ) {
         Icon(
             modifier = Modifier
-                .padding(end = 8.dp)
+                .padding(end = 4.dp)
                 .size(40.dp),
             imageVector = Icons.Filled.DateRange,
             contentDescription = "Ícone de agendamento"
@@ -68,13 +77,14 @@ fun CardHeader(actions: Boolean) {
                 .padding(top = 4.dp),
         ) {
             Text(
-                text = "Sex, 01 de Dezembro",
+                text = dateText,
                 textAlign = TextAlign.Center,
-                fontSize = 16.sp
+                fontSize = 15.sp
             )
             Text(
-                text = "xx:xx:xx",
+                text = timeText,
                 textAlign = TextAlign.Center,
+                fontSize = 13.sp
             )
         }
         Icon(
@@ -143,6 +153,27 @@ fun CardFooter(actions: Boolean) {
             Text("Editar")
         }
     }
+}
+
+fun dateTimeFormatter(dateTime: LocalDateTime): Pair<String, String> {
+    val dateFormatter = DateTimeFormatter.ofPattern(
+        "EEE dd 'de' MMMM 'de' yyyy",
+        Locale("pt", "BR")
+    )
+    val dateText = dateTime.format(dateFormatter)
+        .replaceFirstChar {
+            if (it.isLowerCase()) it.titlecase(
+                Locale(
+                    "pt",
+                    "BR"
+                )
+            ) else it.toString()
+        }
+
+    val timeFormatter = DateTimeFormatter.ofPattern("HH:mm", Locale("pt", "BR"))
+    val timeText = dateTime.format(timeFormatter)
+
+    return Pair(dateText, timeText)
 }
 
 @Preview(showBackground = true)

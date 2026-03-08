@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.LocalTime
 
-class BookingDateSelectViewModel : ViewModel() {
+class BookingViewModel : ViewModel() {
 
     private val _selectedDay = MutableStateFlow<LocalDate?>(null)
     val selectedDay: StateFlow<LocalDate?> = _selectedDay.asStateFlow()
@@ -21,6 +21,9 @@ class BookingDateSelectViewModel : ViewModel() {
     )
     val currentDayAvailableTimes: StateFlow<AvailableTimesState> =
         _currentDayAvailableTimes.asStateFlow()
+
+    private val _selectedTime = MutableStateFlow<LocalTime?>(null)
+    val selectedTime: StateFlow<LocalTime?> = _selectedTime
 
 
     fun onDaySelected(date: LocalDate) {
@@ -41,6 +44,6 @@ class BookingDateSelectViewModel : ViewModel() {
     }
 
     fun onTimeSelected(time: LocalTime) {
-        // Lógica para quando o horário for escolhido
+        _selectedTime.value = time
     }
 }

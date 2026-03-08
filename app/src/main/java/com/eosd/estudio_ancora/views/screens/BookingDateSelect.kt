@@ -14,18 +14,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.eosd.estudio_ancora.views.viewModels.BookingDateSelectViewModel
+import com.eosd.estudio_ancora.views.viewModels.BookingViewModel
 import com.eosd.estudio_ancora.views.viewModels.states.AvailableTimesState
 import com.eosd.estudio_ancora.views.components.Calendar
-import kotlinx.coroutines.delay
 import java.time.LocalTime
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BookingDateSelect(
     paddingValues: PaddingValues = PaddingValues(),
-    viewModel: BookingDateSelectViewModel = viewModel(),
-    onDateTimeSelected: () -> Unit,
+    viewModel: BookingViewModel = viewModel(),
+    onDateTimeSelected: () -> Unit = {},
     onBackPressed: () -> Unit = {},
 ) {
     val selectedDay by viewModel.selectedDay.collectAsStateWithLifecycle()
@@ -60,6 +59,7 @@ fun BookingDateSelect(
                     onTimeSelected = { time ->
                         viewModel.onTimeSelected(time)
                         showBottomSheet = false
+                        onDateTimeSelected()
                     }
                 )
         }
@@ -85,7 +85,6 @@ fun TimeSelect(
                 .padding(horizontal = 32.dp, vertical = 8.dp)
                 .padding(bottom = 16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
-
         ) {
             Text(
                 text = "Escolha o Horário",
