@@ -1,6 +1,7 @@
 package com.eosd.estudio_ancora.views.utils
 
 import java.time.LocalDateTime
+import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
@@ -23,4 +24,11 @@ fun LocalDateTime.toPtBrSplitText(): Pair<String, String> {
     val timeText = this.format(timeFormatter)
 
     return Pair(dateText, timeText)
+}
+
+fun LocalTime.toHHmm(): String {
+    val timeFormatter = DateTimeFormatter.ofPattern("HH:mm", Locale("pt", "BR"))
+    val timeText = this.format(timeFormatter)
+
+    return timeText
 }

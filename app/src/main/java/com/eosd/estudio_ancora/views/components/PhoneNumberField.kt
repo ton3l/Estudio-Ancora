@@ -3,6 +3,9 @@ package com.eosd.estudio_ancora.views.components
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Phone
+import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,7 +22,11 @@ import com.eosd.estudio_ancora.views.utils.BrPhoneNumberVisualTransformation
 
 
 @Composable
-fun PhoneNumberField(modifier: Modifier = Modifier, clientPhoneNumber: String, onPhoneNumberChanged: (String) -> Unit) {
+fun PhoneNumberField(
+    modifier: Modifier = Modifier,
+    clientPhoneNumber: String,
+    onPhoneNumberChanged: (String) -> Unit
+) {
     OutlinedTextField(
         modifier = modifier
             .fillMaxWidth(),
@@ -29,7 +36,13 @@ fun PhoneNumberField(modifier: Modifier = Modifier, clientPhoneNumber: String, o
         },
         label = { Text("Número de Telefone") },
         visualTransformation = BrPhoneNumberVisualTransformation,
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+        leadingIcon = {
+            Icon(
+                imageVector = Icons.Default.Phone,
+                contentDescription = "Phone Icon"
+            )
+        }
     )
 }
 

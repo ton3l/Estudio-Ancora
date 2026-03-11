@@ -33,8 +33,6 @@ object BrPhoneNumberVisualTransformation : VisualTransformation {
         return formattedText
     }
 
-
-
     private val phoneNumberOffsetTranslator = object : OffsetMapping {
 
         override fun originalToTransformed(offset: Int): Int =

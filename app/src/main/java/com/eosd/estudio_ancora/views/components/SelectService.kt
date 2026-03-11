@@ -3,6 +3,7 @@ package com.eosd.estudio_ancora.views.components
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.ContentCut
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -22,11 +23,12 @@ import com.eosd.estudio_ancora.domain.Service
 @Composable
 fun SelectService(
     serviceList: List<Service>,
+    selectedService: Service?,
     onServiceSelected: (service: Service) -> Unit
 ) {
     val options: List<Service> = serviceList
     var expanded by remember { mutableStateOf(false) }
-    var selectedOptionText by remember { mutableStateOf(options[0].name) }
+    var selectedOptionText by remember { mutableStateOf(selectedService?.name ?: "") }
 
     ExposedDropdownMenuBox(
         expanded = expanded,
@@ -39,6 +41,12 @@ fun SelectService(
             readOnly = true,
             label = { Text("Selecione um Serviço") },
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+            leadingIcon = {
+                Icon(
+                    Icons.Filled.ContentCut,
+                    contentDescription = "Tesoura"
+                )
+            },
             modifier = Modifier
                 .menuAnchor()
                 .fillMaxWidth()

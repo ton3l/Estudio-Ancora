@@ -98,7 +98,7 @@ class BookingViewModel : ViewModel() {
     )
 
     fun onDaySelected(date: LocalDate) {
-        _selectedDay.value = if (_selectedDay.value == date) null else date
+        _selectedDay.value = date
         _currentDayAvailableTimes.value = AvailableTimesState.Loading
 
         if (_selectedDay.value != null) {
