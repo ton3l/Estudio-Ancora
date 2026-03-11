@@ -26,15 +26,19 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.eosd.estudio_ancora.domain.Customer
+import com.eosd.estudio_ancora.domain.Service
+import com.eosd.estudio_ancora.views.interfaces.BookingInfo
+import com.eosd.estudio_ancora.views.utils.BrPhoneNumberVisualTransformation
+import com.eosd.estudio_ancora.views.utils.toCurrency
+import com.eosd.estudio_ancora.views.utils.toPtBrSplitText
 import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-import java.util.Locale
 
 @Composable
 fun BookingSummary(
     modifier: Modifier,
     actions: Boolean = false,
-    bookingDateTime: LocalDateTime = LocalDateTime.of(1000, 12, 1, 0, 0)
+    bookingInfo: BookingInfo
 ) {
     ElevatedCard(
         elevation = CardDefaults.cardElevation(
@@ -48,16 +52,16 @@ fun BookingSummary(
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            CardHeader(actions, bookingDateTime)
-            CardBody()
-            CardFooter(actions)
+            CardHeader(actions, bookingInfo.dateTime)
+            CardBody(bookingInfo.customer, bookingInfo.service.name)
+            CardFooter(actions, bookingInfo.service.price)
         }
     }
 }
 
 @Composable
 fun CardHeader(actions: Boolean, bookingDateTime: LocalDateTime) {
-    val ( dateText, timeText ) = dateTimeFormatter(bookingDateTime)
+    val (dateText, timeText) = bookingDateTime.toPtBrSplitText()
 
     Row(
         modifier = Modifier
@@ -99,10 +103,7 @@ fun CardHeader(actions: Boolean, bookingDateTime: LocalDateTime) {
 }
 
 @Composable
-fun CardBody() {
-    val clientName = "Nome do Cliente"
-    val clientContact = "(xx) xxxxx-xxxx"
-    val serviceName = "Serviço"
+fun CardBody(customer: Customer, serviceName: String) {
     Column(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
@@ -110,12 +111,12 @@ fun CardBody() {
             verticalArrangement = Arrangement.spacedBy(1.dp)
         ) {
             Text(
-                text = clientName,
+                text = customer.name,
                 textAlign = TextAlign.Center,
                 fontSize = 14.sp
             )
             Text(
-                text = clientContact,
+                text = BrPhoneNumberVisualTransformation.filter(customer.phoneNumber),
                 textAlign = TextAlign.Center,
                 fontSize = 12.sp
             )
@@ -128,7 +129,7 @@ fun CardBody() {
 }
 
 @Composable
-fun CardFooter(actions: Boolean) {
+fun CardFooter(actions: Boolean, servicePrice: Double) {
     Row(
         modifier = Modifier
             .fillMaxWidth(),
@@ -136,7 +137,7 @@ fun CardFooter(actions: Boolean) {
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(
-            text = "R$ " + "00,00",
+            text = servicePrice.toCurrency(),
             textAlign = TextAlign.Center,
             fontSize = 15.sp
         )
@@ -155,29 +156,23 @@ fun CardFooter(actions: Boolean) {
     }
 }
 
-fun dateTimeFormatter(dateTime: LocalDateTime): Pair<String, String> {
-    val dateFormatter = DateTimeFormatter.ofPattern(
-        "EEE dd 'de' MMMM 'de' yyyy",
-        Locale("pt", "BR")
-    )
-    val dateText = dateTime.format(dateFormatter)
-        .replaceFirstChar {
-            if (it.isLowerCase()) it.titlecase(
-                Locale(
-                    "pt",
-                    "BR"
-                )
-            ) else it.toString()
-        }
-
-    val timeFormatter = DateTimeFormatter.ofPattern("HH:mm", Locale("pt", "BR"))
-    val timeText = dateTime.format(timeFormatter)
-
-    return Pair(dateText, timeText)
-}
-
 @Preview(showBackground = true)
 @Composable
 fun BookingSummaryPreview() {
-    BookingSummary(actions = true, modifier = Modifier.padding(16.dp))
+    BookingSummary(
+        actions = true, modifier = Modifier.padding(16.dp),
+        bookingInfo = object : BookingInfo {
+            override val dateTime: LocalDateTime = LocalDateTime.now()
+            override val customer: Customer = Customer(
+                name = "Nome do Cliente",
+                phoneNumber = "(xx) xxxxx-xxxx"
+            )
+            override val service: Service = Service(
+                id = "1",
+                name = "Corte de Cabelo",
+                duration = 30,
+                price = 25.0
+            )
+        }
+    )
 }

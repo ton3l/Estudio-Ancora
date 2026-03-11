@@ -76,9 +76,11 @@ The database consists of four primary collections.
 **Schema:**
 ```json5
 {
-  "customer": "John Doe",      // String: Client's name
+  "customer": {                // Map: Client's information
+    "name": "John Doe",        // String: Client's name
+    "phoneNumber": "(12) 34567-8910" // String: Client's contact number
+  },
   "dateTime": Timestamp,      // Timestamp: Scheduled date and time
-  "phoneNumber": "(12) 34567-8910", // String: Client's contact number
   "service": {                 // Map: Denormalized service data (snapshot)
     "duration": 1,
     "name": "Corte de cabelo",

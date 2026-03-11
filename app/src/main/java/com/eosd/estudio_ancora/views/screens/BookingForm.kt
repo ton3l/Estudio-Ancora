@@ -6,22 +6,12 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
@@ -30,12 +20,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.eosd.estudio_ancora.views.components.BookingSummary
 import com.eosd.estudio_ancora.views.components.PhoneNumberField
-import com.eosd.estudio_ancora.views.components.Routes
 import com.eosd.estudio_ancora.views.viewModels.BookingViewModel
+import com.eosd.estudio_ancora.views.components.SelectService
 
 @Composable
 fun BookingForm(
@@ -43,8 +31,13 @@ fun BookingForm(
     viewModel: BookingViewModel = viewModel(),
     onServiceBooked: () -> Unit = {},
 ) {
-    val selectedDate = viewModel.selectedDay.collectAsStateWithLifecycle()
-    val selectedTime = viewModel.selectedTime.collectAsStateWithLifecycle()
+    val selectedDate by viewModel.selectedDay.collectAsStateWithLifecycle()
+    val selectedTime by viewModel.selectedTime.collectAsStateWithLifecycle()
+    val selectedService by viewModel.selectedService.collectAsStateWithLifecycle()
+    val clientName by viewModel.customerName.collectAsStateWithLifecycle()
+    val clientPhoneNumber by viewModel.customerPhoneNumber.collectAsStateWithLifecycle()
+    val serviceList by viewModel.serviceList.collectAsStateWithLifecycle()
+    val bookingInfo by viewModel.bookingInfo.collectAsStateWithLifecycle() // TODO: handle null assertion
 
     Surface(
         modifier = Modifier
@@ -56,22 +49,22 @@ fun BookingForm(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            var textState by remember { mutableStateOf("") }
-
             OutlinedTextField(
-                value = textState,
-                onValueChange = { textState = it },
+                value = clientName,
+                onValueChange = { viewModel.onCustomerNameChanged(it) },
                 label = { Text("Nome do Cliente") },
                 modifier = Modifier
                     .fillMaxWidth()
             )
-            PhoneNumberField()
-            SelectService()
+            PhoneNumberField(clientPhoneNumber = clientPhoneNumber) { viewModel.onCustomerPhoneNumberChanged(it) }
+            SelectService(
+                serviceList = serviceList,
+            ) { viewModel.onServiceSelected(it) }
             BookingSummary(
                 actions = false,
                 modifier = Modifier
                     .padding(vertical = 16.dp),
-                bookingDateTime = selectedDate.value!!.atTime(selectedTime.value!!)
+                bookingInfo = bookingInfo
             )
             Button(
                 onClick = {
@@ -84,53 +77,6 @@ fun BookingForm(
                 )
             ) {
                 Text("Confirmar Agendamento")
-            }
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun SelectService() {
-    val options: List<String> =
-        listOf("Corte de Cabelo", "Barba", "Coloração", "Massagem", "Manicure")
-    var expanded by remember { mutableStateOf(false) }
-    var selectedOptionText by remember { mutableStateOf(options[0]) }
-
-    ExposedDropdownMenuBox(
-        expanded = expanded,
-        onExpandedChange = { expanded = !expanded },
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        OutlinedTextField(
-            value = selectedOptionText,
-            onValueChange = { }, // Read-only
-            readOnly = true,
-            label = { Text("Selecione um Serviço") },
-            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-            modifier = Modifier
-                .menuAnchor()
-                .fillMaxWidth()
-        )
-
-        ExposedDropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false },
-            modifier = Modifier.exposedDropdownSize()
-        ) {
-            options.forEach { selectionOption ->
-                DropdownMenuItem(
-                    text = { Text(selectionOption) },
-                    onClick = {
-                        selectedOptionText = selectionOption
-                        expanded = false
-                    },
-                    leadingIcon = {
-                        if (selectionOption == selectedOptionText) {
-                            Icon(Icons.Filled.Check, contentDescription = "Selecionado")
-                        }
-                    }
-                )
             }
         }
     }

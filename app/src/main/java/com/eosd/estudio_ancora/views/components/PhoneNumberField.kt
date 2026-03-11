@@ -8,72 +8,27 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.OffsetMapping
-import androidx.compose.ui.text.input.TransformedText
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.eosd.estudio_ancora.views.utils.BrPhoneNumberVisualTransformation
 
-class BrPhoneNumberVisualTransformation : VisualTransformation {
-
-    override fun filter(text: AnnotatedString): TransformedText {
-        val trimmed = if (text.text.length >= 11) text.text.substring(0..10) else text.text
-
-        var out = if (trimmed.isNotEmpty()) "(" else ""
-
-        for (i in trimmed.indices) {
-            if (i == 2) out += ") "
-            if (i == 7) out += "-"
-            out += trimmed[i]
-        }
-        return TransformedText(AnnotatedString(out), phoneNumberOffsetTranslator)
-    }
-
-    private val phoneNumberOffsetTranslator = object : OffsetMapping {
-
-        override fun originalToTransformed(offset: Int): Int =
-            when (offset) {
-                0 -> 0
-                in 1..2 -> offset + 1
-                in 3..7 -> offset + 3
-                else -> offset + 4
-            }
-
-        override fun transformedToOriginal(offset: Int): Int =
-            when (offset) {
-                0 -> 0
-                in 1..3 -> offset - 1
-                4 -> 2
-                in 5..10 -> offset - 3
-                else -> offset - 4
-            }
-    }
-}
 
 @Composable
-fun PhoneNumberField(modifier: Modifier = Modifier) {
-    var phoneNumber by rememberSaveable { mutableStateOf("") }
-    val numericRegex = Regex("[^0-9]")
+fun PhoneNumberField(modifier: Modifier = Modifier, clientPhoneNumber: String, onPhoneNumberChanged: (String) -> Unit) {
     OutlinedTextField(
         modifier = modifier
             .fillMaxWidth(),
-        value = phoneNumber,
+        value = clientPhoneNumber,
         onValueChange = {
-            // Remove non-numeric characters.
-            val stripped = numericRegex.replace(it, "")
-            phoneNumber = if (stripped.length >= 11) {
-                stripped.substring(0..10)
-            } else {
-                stripped
-            }
+            onPhoneNumberChanged(it)
         },
         label = { Text("Número de Telefone") },
-        visualTransformation = BrPhoneNumberVisualTransformation(),
+        visualTransformation = BrPhoneNumberVisualTransformation,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
     )
 }
@@ -81,5 +36,5 @@ fun PhoneNumberField(modifier: Modifier = Modifier) {
 @Preview(showBackground = true)
 @Composable
 fun PhoneNumberFieldPreview() {
-    PhoneNumberField(modifier = Modifier.padding(16.dp))
+    PhoneNumberField(modifier = Modifier.padding(16.dp), clientPhoneNumber = "99999999999") {}
 }
