@@ -36,14 +36,14 @@ class FirestoreSeederTest {
                     "10" to false,
                     "11" to false,
                     "12" to false,
-                    "13" to false,
-                    "14" to false,
-                    "15" to false,
-                    "16" to false,
-                    "17" to false,
-                    "18" to false,
-                    "19" to false,
-                    "20" to false
+                    "13" to true,
+                    "14" to true,
+                    "15" to true,
+                    "16" to true,
+                    "17" to true,
+                    "18" to true,
+                    "19" to true,
+                    "20" to true
                 )
             )
 

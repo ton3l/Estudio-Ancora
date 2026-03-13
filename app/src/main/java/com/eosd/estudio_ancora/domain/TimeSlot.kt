@@ -5,5 +5,5 @@ import java.time.LocalTime
 data class TimeSlot(
     val hour: LocalTime,
     val booked: Boolean,
-    val bookingId: String
+    val bookingId: String?
 )
