@@ -2,7 +2,9 @@ package com.eosd.estudio_ancora.models.booking
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.eosd.estudio_ancora.domain.Booking
+import com.eosd.estudio_ancora.domain.Customer
 import com.eosd.estudio_ancora.domain.Service
+import com.eosd.estudio_ancora.models.booking.dtos.BookingDocument
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.tasks.await
 import org.junit.Assert.assertEquals
@@ -28,17 +30,17 @@ class BookingModelTest {
             duration = 30,
             price = 40.0
         )
-        
+
         val testBooking = Booking(
             id = "", // O ID será gerado pelo Firestore
-            customer = "Usuário de Teste",
-            dateTime = LocalDateTime.now().withNano(0), // Removendo nanos para evitar problemas de precisão no comparativo
-            phoneNumber = "11988887777",
+            customer = Customer(name = "John Doe", phoneNumber = "1234567890"),
+            dateTime = LocalDateTime.now()
+                .withNano(0), // Removendo nanos para evitar problemas de precisão no comparativo
             service = testService
         )
 
         // 2. Act: Chamar o método addBooking
-        val documentRef = BookingModel.addBooking(testBooking)
+        val documentRef = BookingModel.createBooking(testBooking)
 
         // 3. Assert: Verificar se o documento foi criado com sucesso
         assertNotNull("A referência do documento não deveria ser nula", documentRef)
@@ -49,9 +51,21 @@ class BookingModelTest {
         val savedBooking = snapshot.toObject(BookingDocument::class.java)
 
         assertNotNull("O documento salvo deveria existir no Firestore", savedBooking)
-        assertEquals("O nome do cliente deve coincidir", testBooking.customer, savedBooking?.customer)
-        assertEquals("O número de telefone deve coincidir", testBooking.phoneNumber, savedBooking?.phoneNumber)
-        assertEquals("O nome do serviço deve coincidir", testService.name, savedBooking?.service?.name)
+        assertEquals(
+            "O nome do cliente deve coincidir",
+            testBooking.customer.name,
+            savedBooking?.customer?.name
+        )
+        assertEquals(
+            "O número de telefone deve coincidir",
+            testBooking.customer.phoneNumber,
+            savedBooking?.customer?.phoneNumber
+        )
+        assertEquals(
+            "O nome do serviço deve coincidir",
+            testService.name,
+            savedBooking?.service?.name
+        )
 
         // 5. Cleanup: Remover o documento de teste para manter o banco limpo
 //        documentRef.delete().await()

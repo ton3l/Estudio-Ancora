@@ -4,8 +4,7 @@ import java.time.LocalDateTime
 
 data class Booking(
     val id: String,
-    val customer: String,
+    val customer: Customer,
     val dateTime: LocalDateTime,
-    val phoneNumber: String,
     val service: Service
 )
