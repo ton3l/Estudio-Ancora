@@ -2,49 +2,41 @@ package com.eosd.estudio_ancora
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
+import com.eosd.estudio_ancora.views.utils.toHHmm
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.tasks.await
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.time.LocalTime
 import kotlin.collections.hashMapOf
 
 @RunWith(AndroidJUnit4::class)
 class FirestoreSeederTest {
+    val db = Firebase.firestore
+    val ids = arrayOf(
+        "monday",
+        "tuesday",
+        "wednesday",
+        "thursday",
+        "friday",
+        "saturday",
+        "sunday"
+    )
+
     @Test
     fun seedDatabase() = runBlocking {
-        val db = Firebase.firestore
-
         println("=== START SEED ===")
 
-        val ids = arrayOf(
-            "monday",
-            "tuesday",
-            "wednesday",
-            "thursday",
-            "friday",
-            "saturday",
-            "sunday"
-        )
+        val timeSlots = (8..20).associate { hour ->
+            LocalTime.of(hour, 0).toHHmm() to (hour >= 13)
+        }
+
         ids.forEach { weekDay ->
             val data = hashMapOf(
                 "open" to true,
-                "timeSlots" to hashMapOf(
-                    "8" to false,
-                    "9" to false,
-                    "10" to false,
-                    "11" to false,
-                    "12" to false,
-                    "13" to true,
-                    "14" to true,
-                    "15" to true,
-                    "16" to true,
-                    "17" to true,
-                    "18" to true,
-                    "19" to true,
-                    "20" to true
-                )
+                "timeSlots" to timeSlots
             )
 
             try {
@@ -69,5 +61,15 @@ class FirestoreSeederTest {
         }
 
         println("=== END SEED ===")
+    }
+
+    @Test
+    fun cleanWeekAvailableTimes() = runBlocking {
+        ids.forEach { weekDay ->
+            db.collection("week-available-times")
+                .document(weekDay)
+                .delete()
+                .await()
+        }
     }
 }

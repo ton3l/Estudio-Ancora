@@ -5,15 +5,24 @@ import java.time.LocalTime
 
 data class TimeSlotDocument(
     val booked: Boolean = false,
-    val bookingId: String = "undefined"
+    val bookingId: String = ""
 ) {
     fun toEntity(hour: String): TimeSlot {
-        val time = LocalTime.of(hour.toInt(), 0)
+        val time = LocalTime.parse(hour)
 
         return TimeSlot(
             hour = time,
-            booked = this.booked,
-            bookingId = this.bookingId
+            booked = booked,
+            bookingId = bookingId.ifBlank { null }
         )
+    }
+
+    companion object {
+        fun toDocument(timeSlot: TimeSlot): TimeSlotDocument {
+            return TimeSlotDocument(
+                booked = timeSlot.booked,
+                bookingId = timeSlot.bookingId ?: ""
+            )
+        }
     }
 }

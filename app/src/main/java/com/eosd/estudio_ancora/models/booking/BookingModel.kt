@@ -9,13 +9,10 @@ import kotlinx.coroutines.tasks.await
 object BookingModel {
     private val bookingCollection = firestore.collection("bookings")
 
-    suspend fun createBooking (booking: Booking): DocumentReference {
-        val data = BookingDocument.toDocument(booking)
-
-        val document = bookingCollection
-            .add(data)
+    suspend fun createBooking (booking: Booking) {
+        bookingCollection
+            .document(booking.id)
+            .set(BookingDocument.toDocument(booking))
             .await()
-
-        return document
     }
 }

@@ -4,13 +4,15 @@ import com.eosd.estudio_ancora.models.day.DayModel
 import com.eosd.estudio_ancora.views.viewModels.states.AvailableTimesState
 import java.time.LocalDate
 import java.time.LocalDateTime
-import java.time.LocalTime
 
 object DayService {
     suspend fun getDayAvailableTimes(day: LocalDate): AvailableTimesState {
-        val timeSlots = DayModel.getDayTimeSlots(day)
+        val dayEntity = DayModel.getDay(day)
+
+        val dayAvailableTimes = if (dayEntity.open) dayEntity.timeSlots else emptyList()
+
         val availableTimes = AvailableTimesState.Success(
-            availableTimes = timeSlots
+            availableTimes = dayAvailableTimes
                 .filter { !it.booked }
                 .filter { it.hour.atDate(day) > LocalDateTime.now() }
                 .map { it.hour }

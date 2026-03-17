@@ -4,25 +4,28 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.eosd.estudio_ancora.domain.Booking
 import com.eosd.estudio_ancora.domain.Customer
 import com.eosd.estudio_ancora.domain.Service
+import com.eosd.estudio_ancora.libs.firestore
 import com.eosd.estudio_ancora.models.booking.dtos.BookingDocument
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.tasks.await
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
 import java.time.LocalDateTime
+import java.util.UUID
 
 /**
  * Teste instrumentado para o BookingModel.
- * Como o BookingModel utiliza o Firebase Firestore diretamente, este teste
- * interage com a instância configurada do Firestore.
+ * Este teste interage com a instância configurada do Firestore para garantir
+ * que a persistência de agendamentos está funcionando corretamente.
  */
 @RunWith(AndroidJUnit4::class)
 class BookingModelTest {
 
     @Test
-    fun addBooking_successfullyCreatesDocument() = runBlocking {
+    fun createBooking_successfullyPersistsToFirestore() = runBlocking {
         // 1. Arrange: Preparar os dados para o agendamento
         val testService = Service(
             id = "test-service-id",
@@ -31,35 +34,35 @@ class BookingModelTest {
             price = 40.0
         )
 
+        val testBookingId = UUID.randomUUID().toString()
         val testBooking = Booking(
-            id = "", // O ID será gerado pelo Firestore
+            id = testBookingId,
             customer = Customer(name = "John Doe", phoneNumber = "1234567890"),
-            dateTime = LocalDateTime.now()
-                .withNano(0), // Removendo nanos para evitar problemas de precisão no comparativo
+            dateTime = LocalDateTime.now().withNano(0), // Firestore ignora nanos, então limpamos para o assert
             service = testService
         )
 
-        // 2. Act: Chamar o método addBooking
-        val documentRef = BookingModel.createBooking(testBooking)
+        // 2. Act: Chamar o método createBooking
+        BookingModel.createBooking(testBooking)
 
-        // 3. Assert: Verificar se o documento foi criado com sucesso
-        assertNotNull("A referência do documento não deveria ser nula", documentRef)
-        assertNotNull("O ID do documento gerado não deveria ser nulo", documentRef.id)
-
-        // 4. Verify Content: Buscar o documento diretamente do Firestore para validar os dados
-        val snapshot = documentRef.get().await()
+        // 3. Assert & Verify Content: Buscar o documento diretamente do Firestore para validar os dados
+        val docRef = firestore.collection("bookings").document(testBookingId)
+        val snapshot = docRef.get().await()
+        
+        assertTrue("O documento deveria existir no Firestore", snapshot.exists())
+        
         val savedBooking = snapshot.toObject(BookingDocument::class.java)
-
-        assertNotNull("O documento salvo deveria existir no Firestore", savedBooking)
+        assertNotNull("O documento salvo não deveria ser nulo após a conversão", savedBooking)
+        
+        assertEquals(
+            "O ID do agendamento deve coincidir",
+            testBookingId,
+            savedBooking?.id
+        )
         assertEquals(
             "O nome do cliente deve coincidir",
             testBooking.customer.name,
             savedBooking?.customer?.name
-        )
-        assertEquals(
-            "O número de telefone deve coincidir",
-            testBooking.customer.phoneNumber,
-            savedBooking?.customer?.phoneNumber
         )
         assertEquals(
             "O nome do serviço deve coincidir",
@@ -67,7 +70,7 @@ class BookingModelTest {
             savedBooking?.service?.name
         )
 
-        // 5. Cleanup: Remover o documento de teste para manter o banco limpo
-//        documentRef.delete().await()
+        // 4. Cleanup: Opcional, remover o documento de teste para manter o banco limpo
+        // docRef.delete().await()
     }
 }

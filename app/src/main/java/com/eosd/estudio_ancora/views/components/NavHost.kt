@@ -94,7 +94,12 @@ fun App() {
                             .padding(top = innerPadding.calculateTopPadding())
                             .padding(horizontal = 16.dp, vertical = 16.dp),
                         viewModel = sharedViewModel,
-                        onServiceBooked = { navController.navigate(Routes.BOOKING_LOG) }
+                        onServiceBooked = {
+                            sharedViewModel.createBooking()
+                            navController.navigate(Routes.BOOKING_LOG) {
+                                popUpTo(Routes.BOOKING_FORM) { inclusive = true }
+                            }
+                        }
                     )
                 }
             }

@@ -18,10 +18,14 @@ data class BookingDocument(
 ) {
     fun toEntity(): Booking {
         return Booking(
-            id = this.id,
+            id = id,
             customer = customer.toEntity(),
-            this.dateTime.toDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime(),
-            service = this.service.toEntity()
+            dateTime = dateTime
+                .toDate()
+                .toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDateTime(),
+            service = service.toEntity()
         )
     }
 

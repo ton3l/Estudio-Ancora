@@ -1,7 +1,6 @@
 package com.eosd.estudio_ancora.models.day.dtos
 
 import com.eosd.estudio_ancora.domain.Day
-import com.eosd.estudio_ancora.domain.TimeSlot
 import com.google.firebase.firestore.DocumentId
 import java.time.LocalDate
 
@@ -24,8 +23,14 @@ data class DayDocument(
     }
 
     companion object {
-        fun toDocument() {
-            TODO()
+        fun toDocument(day: Day): DayDocument {
+            return DayDocument(
+                date = day.date.toString(),
+                open = day.open,
+                timeSlots = day.timeSlots.associate { timeSlotEntity ->
+                    timeSlotEntity.hour.toString() to TimeSlotDocument.toDocument(timeSlotEntity)
+                }
+            )
         }
     }
 }

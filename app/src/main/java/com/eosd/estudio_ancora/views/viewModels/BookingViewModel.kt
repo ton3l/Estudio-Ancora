@@ -4,10 +4,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eosd.estudio_ancora.domain.Customer
 import com.eosd.estudio_ancora.domain.Service
+import com.eosd.estudio_ancora.services.BookingService
 import com.eosd.estudio_ancora.services.DayService
 import com.eosd.estudio_ancora.services.ServiceService
 import com.eosd.estudio_ancora.views.interfaces.BookingInfo
 import com.eosd.estudio_ancora.views.viewModels.states.AvailableTimesState
+import com.google.firebase.firestore.DocumentReference
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -143,6 +145,16 @@ class BookingViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 _serviceList.value = ServiceService.getAllServices()
+            } catch (_: Exception) {
+                TODO("Handle error")
+            }
+        }
+    }
+
+    fun createBooking() {
+        viewModelScope.launch {
+            try {
+                BookingService.addBooking(bookingInfo.value)
             } catch (_: Exception) {
                 TODO("Handle error")
             }

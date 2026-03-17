@@ -13,30 +13,62 @@ object DayModel {
     private val bookingDaysCollection = firestore.collection("booking-days")
     private val weekAvailableTimesCollection = firestore.collection("week-available-times")
 
-    suspend fun getDayTimeSlots(date: LocalDate): List<TimeSlot>{
+    suspend fun getDay(date: LocalDate): Day{
         val dbDay = bookingDaysCollection
             .document(date.toString())
             .get()
             .await()
 
         if( dbDay.exists() ) {
-            val dayDocument = dbDay.toObject<DayDocument>()!!
-            val day = dayDocument.toEntity()
+            val day = dbDay
+                .toObject<DayDocument>()!!
+                .toEntity()
 
-            if ( !day.open ) return emptyList()
-
-            val dayAvailableTimes = day.component2()
-            return dayAvailableTimes
+            return day
         }
 
-        val weekDay = weekAvailableTimesCollection
+        val day = weekAvailableTimesCollection
             .document(date.dayOfWeek.toString().lowercase())
             .get()
             .await()
             .toObject<WeekDayAvailableTimes>()!!
+            .toDayEntity(date)
 
-        if ( !weekDay.open ) return emptyList()
+        return day
+    }
 
-        return weekDay.getTimeSlotEntities()
+    suspend fun getBookingDay(date: LocalDate): Day?{
+        val dbDay = bookingDaysCollection
+            .document(date.toString())
+            .get()
+            .await()
+
+        return if( dbDay.exists() )
+            dbDay
+            .toObject<DayDocument>()!!
+            .toEntity()
+        else null
+    }
+
+    suspend fun createBookingDay(date: LocalDate) {
+        val day = weekAvailableTimesCollection
+            .document(date.dayOfWeek.toString().lowercase())
+            .get()
+            .await()
+            .toObject<WeekDayAvailableTimes>()!!
+            .toDayDocument(date)
+
+        bookingDaysCollection
+            .document(day.date)
+            .set(day)
+            .await()
+    }
+
+    suspend fun updateDay(day: Day){
+        val dayDocument = DayDocument.toDocument(day)
+        bookingDaysCollection
+            .document(dayDocument.date)
+            .set(dayDocument) // TODO Bug fix
+            .await()
     }
 }

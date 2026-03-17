@@ -34,13 +34,11 @@ fun BookingForm(
     viewModel: BookingViewModel = viewModel(),
     onServiceBooked: () -> Unit = {},
 ) {
-    val selectedDate by viewModel.selectedDay.collectAsStateWithLifecycle()
-    val selectedTime by viewModel.selectedTime.collectAsStateWithLifecycle()
     val selectedService by viewModel.selectedService.collectAsStateWithLifecycle()
     val clientName by viewModel.customerName.collectAsStateWithLifecycle()
     val clientPhoneNumber by viewModel.customerPhoneNumber.collectAsStateWithLifecycle()
     val serviceList by viewModel.serviceList.collectAsStateWithLifecycle()
-    val bookingInfo by viewModel.bookingInfo.collectAsStateWithLifecycle() // TODO: handle null assertion
+    val bookingInfo by viewModel.bookingInfo.collectAsStateWithLifecycle()
 
     Surface(
         modifier = Modifier

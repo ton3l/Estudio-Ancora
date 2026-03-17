@@ -12,7 +12,7 @@ data class WeekDayAvailableTimes(
     val open: Boolean = false,
     val timeSlots: Map<String, Boolean> = emptyMap()
 ) {
-    fun toDayEntity(date: LocalDate): Day{
+    fun toDayEntity(date: LocalDate): Day {
         return Day(
             date = date,
             open = open,
@@ -20,15 +20,19 @@ data class WeekDayAvailableTimes(
         )
     }
 
-    fun toDayDocument(date: LocalDate): DayDocument{
-        return DayDocument()
+    fun toDayDocument(date: LocalDate): DayDocument {
+        return DayDocument(
+            open = open,
+            date = date.toString(),
+            timeSlots = getTimeSlotDocuments()
+        )
     }
 
     private fun getTimeSlotEntities(): List<TimeSlot> {
         return timeSlots
             .filter { it.value } // is Available?
             .map { (hour) ->
-                val time = LocalTime.of(hour.toInt(), 0)
+                val time = LocalTime.parse(hour)
 
                 TimeSlot(
                     hour = time,
@@ -38,7 +42,14 @@ data class WeekDayAvailableTimes(
             }
     }
 
-    private fun getTimeSlotDocuments(): List<TimeSlotDocument> {
-        TODO()
+    private fun getTimeSlotDocuments(): Map<String, TimeSlotDocument> {
+        return timeSlots
+            .filter { it.value } // is Available?
+            .mapValues {
+                TimeSlotDocument(
+                    booked = false,
+                    bookingId = ""
+                )
+            }
     }
 }
