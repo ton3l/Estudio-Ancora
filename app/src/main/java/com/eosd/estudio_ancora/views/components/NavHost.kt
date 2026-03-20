@@ -24,12 +24,12 @@ import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.eosd.estudio_ancora.views.screens.BookingDateSelect
 import com.eosd.estudio_ancora.views.screens.BookingForm
-import com.eosd.estudio_ancora.views.screens.BookingLog
+import com.eosd.estudio_ancora.views.screens.BookingHistory
 import com.eosd.estudio_ancora.views.viewModels.BookingViewModel
 
 object Routes {
     const val BOOKING_DATE_SELECT = "calendar"
-    const val BOOKING_LOG = "booking_log"
+    const val BOOKING_HISTORY = "booking_history"
     const val BOOKING_FORM = "booking_form"
     const val BOOKING_FLOW = "booking_flow"
 }
@@ -95,16 +95,17 @@ fun App() {
                             .padding(horizontal = 16.dp, vertical = 16.dp),
                         viewModel = sharedViewModel,
                         onServiceBooked = {
-                            sharedViewModel.createBooking()
-                            navController.navigate(Routes.BOOKING_LOG) {
-                                popUpTo(Routes.BOOKING_FORM) { inclusive = true }
+                            sharedViewModel.createBooking() {
+                                navController.navigate(Routes.BOOKING_HISTORY) {
+                                    popUpTo(Routes.BOOKING_FORM) { inclusive = true }
+                                }
                             }
                         }
                     )
                 }
             }
-            composable(Routes.BOOKING_LOG) {
-                BookingLog(
+            composable(Routes.BOOKING_HISTORY) {
+                BookingHistory(
                     modifier = Modifier
                         .padding(top = innerPadding.calculateTopPadding())
                         .padding(top = 16.dp)

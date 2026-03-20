@@ -32,7 +32,7 @@ fun Nav(navController: NavController, modifier: Modifier = Modifier) {
 
     val options = listOf(
         Routes.BOOKING_FLOW to Icons.Default.CalendarMonth,
-        Routes.BOOKING_LOG to Icons.Default.Menu
+        Routes.BOOKING_HISTORY to Icons.Default.Menu
     )
 
     Surface (

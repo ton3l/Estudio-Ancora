@@ -1,5 +1,6 @@
 package com.eosd.estudio_ancora.views.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -7,16 +8,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -38,6 +35,7 @@ import java.time.LocalDateTime
 fun BookingSummary(
     modifier: Modifier,
     actions: Boolean = false,
+    onDeleteBooking: () -> Unit = {},
     bookingInfo: BookingInfo
 ) {
     ElevatedCard(
@@ -52,7 +50,7 @@ fun BookingSummary(
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            CardHeader(actions, bookingInfo.dateTime)
+            CardHeader(actions, bookingInfo.dateTime) { onDeleteBooking() }
             CardBody(bookingInfo.customer, bookingInfo.service.name)
             CardFooter(actions, bookingInfo.service.price)
         }
@@ -60,7 +58,7 @@ fun BookingSummary(
 }
 
 @Composable
-fun CardHeader(actions: Boolean, bookingDateTime: LocalDateTime) {
+fun CardHeader(actions: Boolean, bookingDateTime: LocalDateTime, onDeleteBooking: () -> Unit) {
     val (dateText, timeText) = bookingDateTime.toPtBrSplitText()
 
     Row(
@@ -95,9 +93,12 @@ fun CardHeader(actions: Boolean, bookingDateTime: LocalDateTime) {
             modifier = if (!actions) Modifier
                 .alpha(0f)
             else Modifier
-                .size(size = 26.dp),
+                .size(size = 26.dp)
+                .clickable(
+                    onClick = { onDeleteBooking() }
+                ),
             imageVector = Icons.Filled.Close,
-            contentDescription = "Apagar agendamento"
+            contentDescription = "Apagar agendamento",
         )
     }
 }
@@ -141,18 +142,6 @@ fun CardFooter(actions: Boolean, servicePrice: Double) {
             textAlign = TextAlign.Center,
             fontSize = 15.sp
         )
-        Button(
-            onClick = { false },
-            modifier = if (!actions) Modifier
-                .alpha(0f)
-            else Modifier,
-            shape = RoundedCornerShape(6.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.secondary
-            )
-        ) {
-            Text("Editar")
-        }
     }
 }
 
@@ -165,7 +154,7 @@ fun BookingSummaryPreview() {
             override val dateTime: LocalDateTime = LocalDateTime.now()
             override val customer: Customer = Customer(
                 name = "Nome do Cliente",
-                phoneNumber = "(xx) xxxxx-xxxx"
+                phoneNumber = "xxxxxxxxxxx"
             )
             override val service: Service = Service(
                 id = "1",

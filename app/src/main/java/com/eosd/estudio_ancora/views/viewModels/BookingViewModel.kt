@@ -1,6 +1,7 @@
 package com.eosd.estudio_ancora.views.viewModels
 
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.eosd.estudio_ancora.domain.Customer
 import com.eosd.estudio_ancora.domain.Service
@@ -9,7 +10,6 @@ import com.eosd.estudio_ancora.services.DayService
 import com.eosd.estudio_ancora.services.ServiceService
 import com.eosd.estudio_ancora.views.interfaces.BookingInfo
 import com.eosd.estudio_ancora.views.viewModels.states.AvailableTimesState
-import com.google.firebase.firestore.DocumentReference
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -21,7 +21,7 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 
-class BookingViewModel : ViewModel() {
+class BookingViewModel(application: Application) : AndroidViewModel(application) {
     private val _selectedDay = MutableStateFlow<LocalDate?>(null)
     val selectedDay: StateFlow<LocalDate?> = _selectedDay.asStateFlow()
 
@@ -45,6 +45,9 @@ class BookingViewModel : ViewModel() {
 
     private val _serviceList = MutableStateFlow<List<Service>>(emptyList())
     val serviceList: StateFlow<List<Service>> = _serviceList.asStateFlow()
+
+    private val _isBooking = MutableStateFlow<Boolean>(false)
+    val isBooking: StateFlow<Boolean> = _isBooking.asStateFlow()
 
     init {
         fetchServices()
@@ -151,10 +154,12 @@ class BookingViewModel : ViewModel() {
         }
     }
 
-    fun createBooking() {
+    fun createBooking(onFinished: () -> Unit) {
+        _isBooking.value = true
         viewModelScope.launch {
             try {
-                BookingService.addBooking(bookingInfo.value)
+                BookingService.addBooking(context = getApplication(), bookingInfo = bookingInfo.value)
+                onFinished()
             } catch (_: Exception) {
                 TODO("Handle error")
             }

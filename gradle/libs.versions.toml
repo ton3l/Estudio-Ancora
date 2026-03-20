@@ -1,5 +1,6 @@
 [versions]
 agp = "9.1.0"
+datastorePreferences = "1.2.1"
 firebaseBom = "34.9.0"
 kotlin = "2.2.10"
 coreKtx = "1.10.1"
@@ -18,6 +19,7 @@ foundation = "1.10.3"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 firebase-firestore = { module = "com.google.firebase:firebase-firestore" }
