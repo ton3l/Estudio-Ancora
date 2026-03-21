@@ -20,6 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.eosd.estudio_ancora.domain.Booking
 import com.eosd.estudio_ancora.domain.Customer
 import com.eosd.estudio_ancora.domain.Service
 import com.eosd.estudio_ancora.views.components.BookingSummary
@@ -43,12 +44,18 @@ fun BookingHistory(
         modifier = modifier
             .fillMaxSize()
     ) {
-        ActiveBookingsHandler(activeBookingsState = activeBookingsState)
+        ActiveBookingsHandler(
+            activeBookingsState = activeBookingsState,
+            onDeleteBooking = viewModel::deleteBooking
+        )
     }
 }
 
 @Composable
-fun ActiveBookingsHandler(activeBookingsState: ActiveBookingsState) {
+fun ActiveBookingsHandler(
+    activeBookingsState: ActiveBookingsState,
+    onDeleteBooking: (booking: Booking) -> Unit
+) {
     when (activeBookingsState) {
         is ActiveBookingsState.Error -> {}
         is ActiveBookingsState.Loading -> {
@@ -77,6 +84,7 @@ fun ActiveBookingsHandler(activeBookingsState: ActiveBookingsState) {
                 activeBookingsState.bookings.forEach { booking ->
                     BookingSummary(
                         actions = true,
+                        onDeleteBooking = { onDeleteBooking(booking) },
                         modifier = Modifier.padding(16.dp),
                         bookingInfo = object : BookingInfo {
                             override val dateTime: LocalDateTime = booking.dateTime

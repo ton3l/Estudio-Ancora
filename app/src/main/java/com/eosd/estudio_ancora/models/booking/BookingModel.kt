@@ -37,4 +37,11 @@ object BookingModel {
 
         return bookingDocs.map { it.toEntity() }
     }
+
+    suspend fun deleteBooking(booking: Booking) {
+        bookingCollection
+            .document(booking.id)
+            .delete()
+            .await()
+    }
 }

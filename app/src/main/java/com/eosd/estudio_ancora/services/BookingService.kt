@@ -2,7 +2,6 @@ package com.eosd.estudio_ancora.services
 
 import android.content.Context
 import com.eosd.estudio_ancora.domain.Booking
-import com.eosd.estudio_ancora.domain.Day
 import com.eosd.estudio_ancora.models.booking.BookingLocalPersistence
 import com.eosd.estudio_ancora.models.booking.BookingModel
 import com.eosd.estudio_ancora.models.day.DayModel
@@ -20,7 +19,7 @@ object BookingService {
             dateTime = bookingInfo.dateTime,
             service = bookingInfo.service
         )
-        val bookingDay = handleBookingDay(booking)
+        val bookingDay = DayService.fetchBookingDay(booking)
         val updatedDay = bookingDay.bookTimeSlot(booking)
         DayModel.updateDay(updatedDay)
         BookingModel.createBooking(booking)
@@ -39,12 +38,11 @@ object BookingService {
         return ActiveBookingsState.Success(activeBookings.sortedBy { it.dateTime })
     }
 
-    private suspend fun handleBookingDay(booking: Booking): Day { // IA: verificar se esse número de requisições é realmente necessário
-        val date = booking.dateTime.toLocalDate()
-        val bookingDay = DayModel.getBookingDay(date)
-        if (bookingDay != null) return bookingDay
-
-        DayModel.createBookingDay(date) // TODO implementar transaction nessas operações
-        return DayModel.getBookingDay(date)!!
+    suspend fun deleteBooking(context: Context, booking: Booking) {
+        val bookingDay = DayService.fetchBookingDay(booking)
+        val updatedDay = bookingDay.unbookTimeSlot(booking)
+        DayModel.updateDay(updatedDay)
+        BookingModel.deleteBooking(booking)
+        BookingLocalPersistence.removeBookingId(context, booking.id)
     }
 }

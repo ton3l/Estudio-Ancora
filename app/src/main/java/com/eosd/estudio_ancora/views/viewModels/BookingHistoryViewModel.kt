@@ -3,6 +3,7 @@ package com.eosd.estudio_ancora.views.viewModels
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.eosd.estudio_ancora.domain.Booking
 import com.eosd.estudio_ancora.services.BookingService
 import com.eosd.estudio_ancora.views.viewModels.states.ActiveBookingsState
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,6 +23,13 @@ class BookingHistoryViewModel(application: Application) : AndroidViewModel(appli
         _bookings.value = ActiveBookingsState.Loading
         viewModelScope.launch {
             _bookings.value = BookingService.getUserActiveBookings(getApplication())
+        }
+    }
+
+    fun deleteBooking(booking: Booking) {
+        viewModelScope.launch {
+            BookingService.deleteBooking(getApplication(), booking)
+            fetchBookings()
         }
     }
 }

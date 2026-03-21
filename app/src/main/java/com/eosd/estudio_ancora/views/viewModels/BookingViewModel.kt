@@ -148,7 +148,8 @@ class BookingViewModel(application: Application) : AndroidViewModel(application)
         viewModelScope.launch {
             try {
                 _serviceList.value = ServiceService.getAllServices()
-            } catch (_: Exception) {
+            } catch (e: Exception) {
+                throw e
                 TODO("Handle error")
             }
         }
@@ -159,9 +160,11 @@ class BookingViewModel(application: Application) : AndroidViewModel(application)
         viewModelScope.launch {
             try {
                 BookingService.addBooking(context = getApplication(), bookingInfo = bookingInfo.value)
+                _isBooking.value = false
                 onFinished()
-            } catch (_: Exception) {
+            } catch (e: Exception) {
                 TODO("Handle error")
+                throw e
             }
         }
     }
