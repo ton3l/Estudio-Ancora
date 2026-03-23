@@ -6,14 +6,10 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
@@ -24,13 +20,14 @@ import com.eosd.estudio_ancora.views.utils.BrPhoneNumberVisualTransformation
 @Composable
 fun PhoneNumberField(
     modifier: Modifier = Modifier,
-    clientPhoneNumber: String,
+    customerPhoneNumber: String,
+    phoneNumberError: String?,
     onPhoneNumberChanged: (String) -> Unit
 ) {
     OutlinedTextField(
         modifier = modifier
             .fillMaxWidth(),
-        value = clientPhoneNumber,
+        value = customerPhoneNumber,
         onValueChange = {
             onPhoneNumberChanged(it)
         },
@@ -42,6 +39,16 @@ fun PhoneNumberField(
                 imageVector = Icons.Default.Phone,
                 contentDescription = "Phone Icon"
             )
+        },
+        isError = phoneNumberError != null,
+        supportingText = {
+            phoneNumberError?.let { errorText ->
+                Text(
+                    text = errorText,
+                    color = MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.bodySmall
+                )
+            }
         }
     )
 }
@@ -49,5 +56,5 @@ fun PhoneNumberField(
 @Preview(showBackground = true)
 @Composable
 fun PhoneNumberFieldPreview() {
-    PhoneNumberField(modifier = Modifier.padding(16.dp), clientPhoneNumber = "99999999999") {}
+    PhoneNumberField(modifier = Modifier.padding(16.dp), customerPhoneNumber = "99999999999", null) {}
 }

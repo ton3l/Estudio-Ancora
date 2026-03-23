@@ -3,16 +3,11 @@ package com.eosd.estudio_ancora.views.screens
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.eosd.estudio_ancora.views.components.BookingSummary
+import com.eosd.estudio_ancora.views.components.NameField
 import com.eosd.estudio_ancora.views.components.PhoneNumberField
 import com.eosd.estudio_ancora.views.components.SelectService
 import com.eosd.estudio_ancora.views.viewModels.BookingViewModel
@@ -34,11 +30,8 @@ fun BookingForm(
     viewModel: BookingViewModel = viewModel(),
     onServiceBooked: () -> Unit = {},
 ) {
-    val selectedService by viewModel.selectedService.collectAsStateWithLifecycle()
-    val clientName by viewModel.customerName.collectAsStateWithLifecycle()
-    val clientPhoneNumber by viewModel.customerPhoneNumber.collectAsStateWithLifecycle()
     val serviceList by viewModel.serviceList.collectAsStateWithLifecycle()
-    val bookingInfo by viewModel.bookingInfo.collectAsStateWithLifecycle()
+    val bookingFormState by viewModel.bookingFormState.collectAsStateWithLifecycle()
     val isBooking by viewModel.isBooking.collectAsStateWithLifecycle()
 
     Surface(
@@ -51,31 +44,24 @@ fun BookingForm(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            OutlinedTextField(
-                value = clientName,
-                onValueChange = { viewModel.onCustomerNameChanged(it) },
-                label = { Text("Nome do Cliente") },
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Default.Person,
-                        contentDescription = null
-                    )
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-            )
+            NameField(
+                customerName = bookingFormState.customer.name,
+                customerNameError = bookingFormState.customerNameError
+            ) { viewModel.onCustomerNameChanged(it) }
             PhoneNumberField(
-                clientPhoneNumber = clientPhoneNumber
+                customerPhoneNumber = bookingFormState.customer.phoneNumber,
+                phoneNumberError = bookingFormState.customerPhoneNumberError
             ) { viewModel.onCustomerPhoneNumberChanged(it) }
             SelectService(
                 serviceList = serviceList,
-                selectedService = selectedService
+                selectedService = bookingFormState.service,
+                serviceError = bookingFormState.serviceError
             ) { viewModel.onServiceSelected(it) }
             BookingSummary(
                 actions = false,
                 modifier = Modifier
                     .padding(vertical = 16.dp),
-                bookingInfo = bookingInfo
+                bookingInfo = bookingFormState
             )
             Button(
                 onClick = {

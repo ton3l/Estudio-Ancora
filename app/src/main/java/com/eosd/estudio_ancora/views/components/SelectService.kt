@@ -9,6 +9,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,6 +25,7 @@ import com.eosd.estudio_ancora.domain.Service
 fun SelectService(
     serviceList: List<Service>,
     selectedService: Service?,
+    serviceError: String?,
     onServiceSelected: (service: Service) -> Unit
 ) {
     val options: List<Service> = serviceList
@@ -49,7 +51,17 @@ fun SelectService(
             },
             modifier = Modifier
                 .menuAnchor()
-                .fillMaxWidth()
+                .fillMaxWidth(),
+            isError = serviceError != null,
+            supportingText = {
+                serviceError?.let { errorText ->
+                    Text(
+                        text = errorText,
+                        color = MaterialTheme.colorScheme.error,
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                }
+            }
         )
 
         ExposedDropdownMenu(

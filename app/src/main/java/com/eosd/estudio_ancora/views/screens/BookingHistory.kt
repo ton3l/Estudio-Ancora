@@ -21,13 +21,10 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.eosd.estudio_ancora.domain.Booking
-import com.eosd.estudio_ancora.domain.Customer
-import com.eosd.estudio_ancora.domain.Service
 import com.eosd.estudio_ancora.views.components.BookingSummary
-import com.eosd.estudio_ancora.views.interfaces.BookingInfo
 import com.eosd.estudio_ancora.views.viewModels.BookingHistoryViewModel
 import com.eosd.estudio_ancora.views.viewModels.states.ActiveBookingsState
-import java.time.LocalDateTime
+import com.eosd.estudio_ancora.views.viewModels.states.BookingFormState
 
 @Composable
 fun BookingHistory(
@@ -86,11 +83,11 @@ fun ActiveBookingsHandler(
                         actions = true,
                         onDeleteBooking = { onDeleteBooking(booking) },
                         modifier = Modifier.padding(16.dp),
-                        bookingInfo = object : BookingInfo {
-                            override val dateTime: LocalDateTime = booking.dateTime
-                            override val customer: Customer = booking.customer
-                            override val service: Service = booking.service
-                        }
+                        bookingInfo = BookingFormState(
+                            customer = booking.customer,
+                            service = booking.service,
+                            dateTime = booking.dateTime
+                        )
                     )
                 }
             }

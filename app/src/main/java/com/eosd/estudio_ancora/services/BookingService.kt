@@ -6,18 +6,18 @@ import com.eosd.estudio_ancora.models.booking.BookingLocalPersistence
 import com.eosd.estudio_ancora.models.booking.BookingModel
 import com.eosd.estudio_ancora.models.day.DayModel
 import com.eosd.estudio_ancora.services.utils.generateFirestoreId
-import com.eosd.estudio_ancora.views.interfaces.BookingInfo
 import com.eosd.estudio_ancora.views.viewModels.states.ActiveBookingsState
+import com.eosd.estudio_ancora.views.viewModels.states.BookingFormState
 import kotlinx.coroutines.flow.first
 import java.time.LocalDateTime
 
 object BookingService {
-    suspend fun addBooking(context: Context, bookingInfo: BookingInfo) {
+    suspend fun addBooking(context: Context, bookingInfo: BookingFormState) {
         val booking = Booking(
             id = generateFirestoreId(),
             customer = bookingInfo.customer,
             dateTime = bookingInfo.dateTime,
-            service = bookingInfo.service
+            service = bookingInfo.service!!
         )
         val bookingDay = DayService.fetchBookingDay(booking)
         val updatedDay = bookingDay.bookTimeSlot(booking)

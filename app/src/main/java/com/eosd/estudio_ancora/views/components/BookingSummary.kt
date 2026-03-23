@@ -25,10 +25,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.eosd.estudio_ancora.domain.Customer
 import com.eosd.estudio_ancora.domain.Service
-import com.eosd.estudio_ancora.views.interfaces.BookingInfo
 import com.eosd.estudio_ancora.views.utils.BrPhoneNumberVisualTransformation
 import com.eosd.estudio_ancora.views.utils.toCurrency
 import com.eosd.estudio_ancora.views.utils.toPtBrSplitText
+import com.eosd.estudio_ancora.views.viewModels.states.BookingFormState
 import java.time.LocalDateTime
 
 @Composable
@@ -36,7 +36,7 @@ fun BookingSummary(
     modifier: Modifier,
     actions: Boolean = false,
     onDeleteBooking: () -> Unit = {},
-    bookingInfo: BookingInfo
+    bookingInfo: BookingFormState
 ) {
     ElevatedCard(
         elevation = CardDefaults.cardElevation(
@@ -51,8 +51,8 @@ fun BookingSummary(
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             CardHeader(actions, bookingInfo.dateTime) { onDeleteBooking() }
-            CardBody(bookingInfo.customer, bookingInfo.service.name)
-            CardFooter(actions, bookingInfo.service.price)
+            CardBody(bookingInfo.customer, bookingInfo.service?.name ?: "")
+            CardFooter(actions, bookingInfo.service?.price ?: 0.0)
         }
     }
 }
@@ -104,7 +104,7 @@ fun CardHeader(actions: Boolean, bookingDateTime: LocalDateTime, onDeleteBooking
 }
 
 @Composable
-fun CardBody(customer: Customer, serviceName: String) {
+fun CardBody(customer: Customer, serviceName: String = "") {
     Column(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
@@ -150,18 +150,18 @@ fun CardFooter(actions: Boolean, servicePrice: Double) {
 fun BookingSummaryPreview() {
     BookingSummary(
         actions = true, modifier = Modifier.padding(16.dp),
-        bookingInfo = object : BookingInfo {
-            override val dateTime: LocalDateTime = LocalDateTime.now()
-            override val customer: Customer = Customer(
-                name = "Nome do Cliente",
-                phoneNumber = "xxxxxxxxxxx"
-            )
-            override val service: Service = Service(
+        bookingInfo = BookingFormState(
+            dateTime = LocalDateTime.parse("2024-06-30T14:30:00"),
+            customer = Customer(
+                name = "João Silva",
+                phoneNumber = "11987654321"
+            ),
+            service = Service(
                 id = "1",
                 name = "Corte de Cabelo",
-                duration = 30,
-                price = 25.0
+                duration = 60,
+                price = 50.0
             )
-        }
+        )
     )
 }
