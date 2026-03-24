@@ -11,11 +11,17 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -60,6 +66,7 @@ fun BookingSummary(
 @Composable
 fun CardHeader(actions: Boolean, bookingDateTime: LocalDateTime, onDeleteBooking: () -> Unit) {
     val (dateText, timeText) = bookingDateTime.toPtBrSplitText()
+    var showDialog by remember { mutableStateOf(false) }
 
     Row(
         modifier = Modifier
@@ -95,11 +102,14 @@ fun CardHeader(actions: Boolean, bookingDateTime: LocalDateTime, onDeleteBooking
             else Modifier
                 .size(size = 26.dp)
                 .clickable(
-                    onClick = { onDeleteBooking() }
+                    onClick = {
+                        showDialog = true
+                    }
                 ),
             imageVector = Icons.Filled.Close,
             contentDescription = "Apagar agendamento",
         )
+        ConfirmDeleteModal(showDialog, { showDialog = false }) { onDeleteBooking() }
     }
 }
 
@@ -143,6 +153,23 @@ fun CardFooter(actions: Boolean, servicePrice: Double) {
             fontSize = 15.sp
         )
     }
+}
+
+@Composable
+fun ConfirmDeleteModal(showDialog: Boolean, onDismissRequest: () -> Unit, onConfirm: () -> Unit) {
+    if (showDialog) {
+        AlertDialog(
+            onDismissRequest = { onDismissRequest() }, // Fecha ao clicar fora
+            confirmButton = {
+                TextButton(onClick = { onConfirm(); onDismissRequest() }) { Text("Sim") }
+            },
+            dismissButton = {
+                TextButton(onClick = { onDismissRequest() }) { Text("Não") }
+            },
+            title = { Text("Deseja cancelar o agendamento?") },
+        )
+    }
+
 }
 
 @Preview(showBackground = true)

@@ -97,7 +97,7 @@ fun App() {
                         onServiceBooked = {
                             sharedViewModel.createBooking() {
                                 navController.navigate(Routes.BOOKING_HISTORY) {
-                                    popUpTo(Routes.BOOKING_FORM) { inclusive = true }
+                                    popUpTo(Routes.BOOKING_FLOW) { inclusive = true }
                                 }
                             }
                         }
