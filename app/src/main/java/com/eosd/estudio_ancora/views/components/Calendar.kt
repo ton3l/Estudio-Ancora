@@ -37,7 +37,7 @@ import java.util.Locale
 fun Calendar(selectedDay: LocalDate?, onDaySelected: (CalendarDay) -> Unit) {
     val currentMonth = remember { YearMonth.now() }
     val startMonth = remember { currentMonth.minusMonths(0) }
-    val endMonth = remember { currentMonth.plusMonths(6) }
+    val endMonth = remember { currentMonth.plusMonths(3) }
     val firstDayOfWeek = remember { firstDayOfWeekFromLocale() }
     val today = remember { LocalDate.now() }
 

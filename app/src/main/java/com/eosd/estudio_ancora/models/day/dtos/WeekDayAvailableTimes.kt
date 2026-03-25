@@ -40,11 +40,13 @@ data class WeekDayAvailableTimes(
                     bookingId = null
                 )
             }
+            .sortedBy { it.hour }
     }
 
     private fun getTimeSlotDocuments(): Map<String, TimeSlotDocument> {
         return timeSlots
             .filter { it.value } // is Available?
+            .toSortedMap()
             .mapValues {
                 TimeSlotDocument(
                     booked = false,

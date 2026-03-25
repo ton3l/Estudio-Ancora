@@ -159,7 +159,7 @@ fun CardFooter(actions: Boolean, servicePrice: Double) {
 fun ConfirmDeleteModal(showDialog: Boolean, onDismissRequest: () -> Unit, onConfirm: () -> Unit) {
     if (showDialog) {
         AlertDialog(
-            onDismissRequest = { onDismissRequest() }, // Fecha ao clicar fora
+            onDismissRequest = { onDismissRequest() },
             confirmButton = {
                 TextButton(onClick = { onConfirm(); onDismissRequest() }) { Text("Sim") }
             },

@@ -23,13 +23,4 @@ object DayService {
 
         return availableTimes
     }
-
-    suspend fun fetchBookingDay(booking: Booking): Day { // IA: verificar se esse número de requisições é realmente necessário
-        val date = booking.dateTime.toLocalDate()
-        val bookingDay = DayModel.getBookingDay(date)
-        if (bookingDay != null) return bookingDay
-
-        DayModel.createBookingDay(date) // TODO implementar transaction nessas operações
-        return DayModel.getBookingDay(date)!!
-    }
 }

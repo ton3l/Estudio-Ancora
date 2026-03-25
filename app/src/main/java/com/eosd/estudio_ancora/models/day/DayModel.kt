@@ -13,6 +13,9 @@ object DayModel {
     private val bookingDaysCollection = firestore.collection("booking-days")
     private val weekAvailableTimesCollection = firestore.collection("week-available-times")
 
+    fun getDayRef(date: LocalDate) = bookingDaysCollection.document(date.toString())
+    fun getWeekAvailableRef(date: LocalDate) = weekAvailableTimesCollection.document(date.dayOfWeek.toString().lowercase())
+
     suspend fun getDay(date: LocalDate): Day{
         val dbDay = bookingDaysCollection
             .document(date.toString())
@@ -48,20 +51,6 @@ object DayModel {
             .toObject<DayDocument>()!!
             .toEntity()
         else null
-    }
-
-    suspend fun createBookingDay(date: LocalDate) {
-        val day = weekAvailableTimesCollection
-            .document(date.dayOfWeek.toString().lowercase())
-            .get()
-            .await()
-            .toObject<WeekDayAvailableTimes>()!!
-            .toDayDocument(date)
-
-        bookingDaysCollection
-            .document(day.date)
-            .set(day)
-            .await()
     }
 
     suspend fun updateDay(day: Day){

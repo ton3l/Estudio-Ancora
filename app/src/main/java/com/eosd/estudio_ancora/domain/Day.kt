@@ -29,19 +29,17 @@ data class Day(
         transform: (timeSlot: TimeSlot) -> TimeSlot
     ): List<TimeSlot> {
         val targetTime = booking.dateTime.toLocalTime()
-        var found = false
+        val duration = booking.service.duration
 
-        val newTimeSlots = timeSlots.map { slot ->
-            if (slot.hour == targetTime) {
-                found = true
+        val startIndex = timeSlots.indexOfFirst { it.hour == targetTime }
+        if (startIndex == -1) throw Exception("Horário inexistente $targetTime")
+
+        return timeSlots.mapIndexed { index, slot ->
+            if (index in startIndex until (startIndex + duration)) {
                 transform(slot)
-            }
-            else
+            } else {
                 slot
+            }
         }
-
-        if (!found) throw Exception("Horário inexistente $targetTime")
-
-        return newTimeSlots
     }
 }

@@ -1,7 +1,6 @@
 package com.eosd.estudio_ancora
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.test.platform.app.InstrumentationRegistry
 import com.eosd.estudio_ancora.views.utils.toHHmm
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
@@ -10,7 +9,6 @@ import kotlinx.coroutines.tasks.await
 import org.junit.Test
 import org.junit.runner.RunWith
 import java.time.LocalTime
-import kotlin.collections.hashMapOf
 
 @RunWith(AndroidJUnit4::class)
 class FirestoreSeederTest {
@@ -29,7 +27,7 @@ class FirestoreSeederTest {
     fun seedDatabase() = runBlocking {
         println("=== START SEED ===")
 
-        val timeSlots = (8..20).associate { hour ->
+        val timeSlots = (6..23).associate { hour ->
             LocalTime.of(hour, 0).toHHmm() to (hour >= 13)
         }
 

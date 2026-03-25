@@ -11,7 +11,7 @@ data class DayDocument(
     val timeSlots: Map<String, TimeSlotDocument> = emptyMap()
 ) {
     fun toEntity(): Day {
-        val entityTimeSlots = timeSlots.map { (hour, timeSlotDocument) ->
+        val entityTimeSlots = timeSlots.toSortedMap().map { (hour, timeSlotDocument) ->
             timeSlotDocument.toEntity(hour)
         }
 
@@ -29,7 +29,7 @@ data class DayDocument(
                 open = day.open,
                 timeSlots = day.timeSlots.associate { timeSlotEntity ->
                     timeSlotEntity.hour.toString() to TimeSlotDocument.toDocument(timeSlotEntity)
-                }
+                }.toSortedMap()
             )
         }
     }

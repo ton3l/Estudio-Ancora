@@ -11,6 +11,8 @@ import kotlinx.coroutines.tasks.await
 object BookingModel {
     private val bookingCollection = firestore.collection("bookings")
 
+    fun getBookingRef(bookingId: String) = bookingCollection.document(bookingId)
+
     suspend fun createBooking (booking: Booking) {
         bookingCollection
             .document(booking.id)
