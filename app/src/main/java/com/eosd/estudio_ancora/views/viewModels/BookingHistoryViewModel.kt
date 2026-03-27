@@ -5,7 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.eosd.estudio_ancora.domain.Booking
 import com.eosd.estudio_ancora.services.BookingService
-import com.eosd.estudio_ancora.views.viewModels.states.ActiveBookingsState
+import com.eosd.estudio_ancora.core.states.ActiveBookingsState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

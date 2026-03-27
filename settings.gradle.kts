@@ -24,4 +24,7 @@ dependencyResolutionManagement {
 
 rootProject.name = "estudio_ancora"
 include(":app")
+include(":shared")
+include(":admin")
+include(":core")
  

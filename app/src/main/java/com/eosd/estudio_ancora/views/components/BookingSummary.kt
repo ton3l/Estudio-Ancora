@@ -34,7 +34,7 @@ import com.eosd.estudio_ancora.domain.Service
 import com.eosd.estudio_ancora.views.utils.BrPhoneNumberVisualTransformation
 import com.eosd.estudio_ancora.views.utils.toCurrency
 import com.eosd.estudio_ancora.views.utils.toPtBrSplitText
-import com.eosd.estudio_ancora.views.viewModels.states.BookingFormState
+import com.eosd.estudio_ancora.core.states.BookingFormState
 import java.time.LocalDateTime
 
 @Composable

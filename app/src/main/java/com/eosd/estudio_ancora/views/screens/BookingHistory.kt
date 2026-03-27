@@ -23,8 +23,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.eosd.estudio_ancora.domain.Booking
 import com.eosd.estudio_ancora.views.components.BookingSummary
 import com.eosd.estudio_ancora.views.viewModels.BookingHistoryViewModel
-import com.eosd.estudio_ancora.views.viewModels.states.ActiveBookingsState
-import com.eosd.estudio_ancora.views.viewModels.states.BookingFormState
+import com.eosd.estudio_ancora.core.states.ActiveBookingsState
+import com.eosd.estudio_ancora.core.states.BookingFormState
 
 @Composable
 fun BookingHistory(

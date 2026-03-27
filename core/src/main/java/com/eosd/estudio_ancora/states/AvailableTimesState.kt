@@ -1,4 +1,4 @@
-package com.eosd.estudio_ancora.views.viewModels.states
+package com.eosd.estudio_ancora.core.states
 
 import java.time.LocalTime
 

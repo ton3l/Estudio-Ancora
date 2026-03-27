@@ -3,7 +3,7 @@ package com.eosd.estudio_ancora.services
 import com.eosd.estudio_ancora.domain.Booking
 import com.eosd.estudio_ancora.domain.Day
 import com.eosd.estudio_ancora.models.day.DayModel
-import com.eosd.estudio_ancora.views.viewModels.states.AvailableTimesState
+import com.eosd.estudio_ancora.core.states.AvailableTimesState
 import java.time.LocalDate
 import java.time.LocalDateTime
 

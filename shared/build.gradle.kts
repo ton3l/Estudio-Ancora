@@ -1,24 +1,17 @@
 plugins {
-    alias(libs.plugins.android.application)
+    alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    id("com.google.gms.google-services")
 }
 
 android {
-    namespace = "com.eosd.estudio_ancora"
-    compileSdk {
-        version = release(36)
-    }
+    namespace = "com.eosd.estudio_ancora.shared"
+    compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.eosd.estudio_ancora"
         minSdk = 24
-        targetSdk = 36
-        versionCode = 1
-        versionName = "1.0"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles("consumer-rules.pro")
     }
 
     buildTypes {
@@ -44,7 +37,9 @@ android {
 }
 
 dependencies {
-    implementation(project(":shared"))
+    api(project(":core"))
+    
+    // UI e Compose para o módulo shared (Temas, Cores, Componentes Compartilhados)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -56,21 +51,10 @@ dependencies {
     implementation(libs.androidx.compose.foundation)
     implementation(libs.androidx.compose.ui.text)
     implementation(libs.androidx.compose.material.icons.extended)
-    implementation(libs.androidx.navigation.compose)
-    implementation(libs.kizitonwose.calendar.compose)
-    implementation(libs.kotlinx.coroutines.play.services)
-    implementation(libs.androidx.ui.text)
-    implementation(libs.androidx.foundation)
-    implementation(platform(libs.firebase.bom))
-    implementation(libs.firebase.analytics)
-    implementation(libs.firebase.firestore)
+    
     coreLibraryDesugaring(libs.desugar.jdk.libs)
+    
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.androidx.compose.ui.test.junit4)
-    debugImplementation(libs.androidx.compose.ui.tooling)
-    debugImplementation(libs.androidx.compose.ui.test.manifest)
-    implementation(libs.androidx.datastore.preferences)
 }
