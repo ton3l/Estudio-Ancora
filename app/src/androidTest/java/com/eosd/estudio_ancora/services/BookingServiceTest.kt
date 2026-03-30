@@ -5,13 +5,12 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.eosd.estudio_ancora.domain.Customer
 import com.eosd.estudio_ancora.domain.Service
 import com.eosd.estudio_ancora.models.day.DayModel
-import com.eosd.estudio_ancora.core.states.BookingFormState
+import com.eosd.estudio_ancora.states.BookingFormState
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith
 import java.time.LocalDateTime
-import java.time.LocalTime
 
 /**
  * Teste instrumentado para o BookingService.

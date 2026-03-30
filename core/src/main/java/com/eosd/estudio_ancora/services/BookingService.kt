@@ -11,8 +11,8 @@ import com.eosd.estudio_ancora.models.day.DayModel
 import com.eosd.estudio_ancora.models.day.dtos.DayDocument
 import com.eosd.estudio_ancora.models.day.dtos.WeekDayAvailableTimes
 import com.eosd.estudio_ancora.services.utils.generateFirestoreId
-import com.eosd.estudio_ancora.core.states.ActiveBookingsState
-import com.eosd.estudio_ancora.core.states.BookingFormState
+import com.eosd.estudio_ancora.states.ActiveBookingsState
+import com.eosd.estudio_ancora.states.BookingFormState
 import com.google.firebase.firestore.toObject
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.tasks.await

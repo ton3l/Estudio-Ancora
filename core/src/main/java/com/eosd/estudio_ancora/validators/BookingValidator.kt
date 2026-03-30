@@ -1,6 +1,6 @@
-package com.eosd.estudio_ancora.views.validators
+package com.eosd.estudio_ancora.validators
 
-import com.eosd.estudio_ancora.core.states.BookingFormState
+import com.eosd.estudio_ancora.states.BookingFormState
 import java.time.LocalDateTime
 
 object BookingValidator {

@@ -1,4 +1,4 @@
-package com.eosd.estudio_ancora.core.states
+package com.eosd.estudio_ancora.states
 
 import com.eosd.estudio_ancora.domain.Customer
 import com.eosd.estudio_ancora.domain.Service

@@ -41,7 +41,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.eosd.estudio_ancora.views.components.Calendar
 import com.eosd.estudio_ancora.views.utils.toHHmm
 import com.eosd.estudio_ancora.views.viewModels.BookingViewModel
-import com.eosd.estudio_ancora.core.states.AvailableTimesState
+import com.eosd.estudio_ancora.states.AvailableTimesState
 import java.time.LocalTime
 
 @OptIn(ExperimentalMaterial3Api::class)

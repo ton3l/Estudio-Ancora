@@ -7,9 +7,9 @@ import com.eosd.estudio_ancora.domain.Service
 import com.eosd.estudio_ancora.services.BookingService
 import com.eosd.estudio_ancora.services.DayService
 import com.eosd.estudio_ancora.services.ServiceService
-import com.eosd.estudio_ancora.views.validators.BookingValidator
-import com.eosd.estudio_ancora.core.states.AvailableTimesState
-import com.eosd.estudio_ancora.core.states.BookingFormState
+import com.eosd.estudio_ancora.validators.BookingValidator
+import com.eosd.estudio_ancora.states.AvailableTimesState
+import com.eosd.estudio_ancora.states.BookingFormState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

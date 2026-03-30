@@ -23,6 +23,12 @@ The project follows a modified MVC pattern tailored for Jetpack Compose:
 ## Documentation
 
 - **Location:** Project documentation can be found in the `docs/` directory.
+- **Files:**
+  - `architecture.md`: Details the modified MVC pattern (Domain, Models, Services, Views & Controllers) and the data flow.
+  - `database.md`: Describes the Firestore structure (collections, schemas), denormalization strategies, and JIT initialization.
+  - `modules.md`: Explains the project's multi-module architecture (`:core`, `:shared`, `:app`, `:admin`) and their responsibilities.
+  - `project_structure.md`: Provides an overview of the directory structure and module organization.
+- **Maintenance:** Any modification that affects a documented scope requires a mandatory update to the relevant documentation file as the final step of the agent's execution.
 
 ## Building and Running
 
@@ -54,10 +60,11 @@ This project uses Gradle to manage dependencies and build the application.
 - **Code Cleanup:** Do not perform automatic code cleanup (e.g., removing unused imports, reformatting) unless explicitly requested by the user. If a need for cleanup is identified, alert the user instead of applying changes.
 - **Task Focus:** Focus strictly on the assigned task. Do not worry about or modify the application's testing modules unless explicitly specified in the prompt.
 
-## Ask Context
-- **Explications Always:** I am new to Android development and I want to learn. Therefore, **always provide explanations** of what is being done and why, even when performing code modifications or in "edit mode".
-- **Concise Execution:** If I have already requested a plan for an action and am now asking for its execution, deep explanations are not necessary; just state which step is being performed.
-- **No Analogies:** I prefer direct, technical explanations. Avoid using analogies unless I explicitly ask for one.
-- **Agent Mode:** I will use the prefix `agent:` to authorize code modifications or file system operations. If the prompt does NOT start with `agent:`, you must only provide explanations, analysis, and a structured plan. Show any proposed code changes using formatted Markdown code blocks (never as plain text or simulated edits) and do NOT modify any files.
+## Chat Context
+- **Educational Explanations:** I am new to Android development. Always provide technical explanations for all actions and changes to facilitate learning.
+- **Execution Briefing:** If a plan was previously approved, keep explanations brief during execution; simply state the current step.
+- **No Analogies:** Use direct, technical explanations. Avoid analogies unless I explicitly ask for one.
+- **Markdown Formatting:** Always format explanations, analysis, and structured plans correctly using Markdown (never as plain text or simulated edits).
+- **Planning Mode:** If the prompt starts with the `planning:` prefix, provide **only** analysis and structured planning. If the prefix is absent, you are authorized to implement changes and perform filesystem operations autonomously.
 
 I'm new to Android development and to the Android ecosystem (Gradle, Compose, Material, etc.). This is my first real project using these technologies, and I want to learn and understand what I'm doing.
