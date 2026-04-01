@@ -21,7 +21,7 @@ object BrPhoneNumberVisualTransformation : VisualTransformation {
 
     fun filter(text: String): String {
         val trimmed = if (text.length >= 11) text.substring(0..10) else text
-
+        
         var formattedText = if (trimmed.isNotEmpty()) "(" else ""
 
         for (i in trimmed.indices) {

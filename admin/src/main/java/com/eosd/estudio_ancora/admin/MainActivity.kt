@@ -12,28 +12,19 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.eosd.estudio_ancora.views.theme.EstudioancoraTheme
+import com.eosd.estudio_ancora.admin.views.screens.AdminServices
+import com.eosd.estudio_ancora.views.theme.Estudio_ancoraTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            EstudioancoraTheme {
+            Estudio_ancoraTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    AdminHomeScreen(modifier = Modifier.padding(innerPadding))
+                    AdminServices(modifier = Modifier.padding(innerPadding))
                 }
             }
         }
-    }
-}
-
-@Composable
-fun AdminHomeScreen(modifier: Modifier = Modifier) {
-    Box(
-        modifier = modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(text = "Estúdio Âncora - Administração")
     }
 }

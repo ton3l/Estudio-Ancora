@@ -18,8 +18,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Person
 import com.eosd.estudio_ancora.views.components.BookingSummary
-import com.eosd.estudio_ancora.views.components.NameField
+import com.eosd.estudio_ancora.views.components.TextInput
 import com.eosd.estudio_ancora.views.components.PhoneNumberField
 import com.eosd.estudio_ancora.views.components.SelectService
 import com.eosd.estudio_ancora.views.viewModels.BookingViewModel
@@ -44,10 +46,13 @@ fun BookingForm(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            NameField(
-                customerName = bookingFormState.customer.name,
-                customerNameError = bookingFormState.customerNameError
-            ) { viewModel.onCustomerNameChanged(it) }
+            TextInput(
+                value = bookingFormState.customer.name,
+                valueError = bookingFormState.customerNameError,
+                label = "Nome do Cliente",
+                leadingIcon = Icons.Default.Person,
+                onValueChanged = { viewModel.onCustomerNameChanged(it) }
+            )
             PhoneNumberField(
                 customerPhoneNumber = bookingFormState.customer.phoneNumber,
                 phoneNumberError = bookingFormState.customerPhoneNumberError

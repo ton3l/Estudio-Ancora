@@ -60,11 +60,4 @@ This project uses Gradle to manage dependencies and build the application.
 - **Code Cleanup:** Do not perform automatic code cleanup (e.g., removing unused imports, reformatting) unless explicitly requested by the user. If a need for cleanup is identified, alert the user instead of applying changes.
 - **Task Focus:** Focus strictly on the assigned task. Do not worry about or modify the application's testing modules unless explicitly specified in the prompt.
 
-## Chat Context
-- **Educational Explanations:** I am new to Android development. Always provide technical explanations for all actions and changes to facilitate learning.
-- **Execution Briefing:** If a plan was previously approved, keep explanations brief during execution; simply state the current step.
-- **No Analogies:** Use direct, technical explanations. Avoid analogies unless I explicitly ask for one.
-- **Markdown Formatting:** Always format explanations, analysis, and structured plans correctly using Markdown (never as plain text or simulated edits).
-- **Planning Mode:** If the prompt starts with the `planning:` prefix, provide **only** analysis and structured planning. If the prefix is absent, you are authorized to implement changes and perform filesystem operations autonomously.
-
 I'm new to Android development and to the Android ecosystem (Gradle, Compose, Material, etc.). This is my first real project using these technologies, and I want to learn and understand what I'm doing.
