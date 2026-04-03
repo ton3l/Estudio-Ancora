@@ -18,6 +18,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import com.eosd.estudio_ancora.domain.Service
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -86,4 +87,22 @@ fun SelectService(
             }
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun SelectServicePreview() {
+    SelectService(
+        serviceList = listOf(
+            Service(
+                id = "1",
+                name = "Serviço Teste",
+                duration = 30,
+                price = 50.0
+            )
+        ),
+        selectedService = null,
+        serviceError = null,
+        onServiceSelected = {}
+    )
 }

@@ -9,6 +9,7 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -43,13 +44,23 @@ fun GenericDisplayEntity(
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                IconButton(onClick = onEditClick) {
+                IconButton(
+                    onClick = onEditClick,
+                    colors = IconButtonDefaults.iconButtonColors(
+                        contentColor = MaterialTheme.colorScheme.outline
+                    )
+                ) {
                     Icon(
                         imageVector = Icons.Default.Edit,
                         contentDescription = "Editar"
                     )
                 }
-                IconButton(onClick = onDeleteClick) {
+                IconButton(
+                    onClick = onDeleteClick,
+                    colors = IconButtonDefaults.iconButtonColors(
+                        contentColor = MaterialTheme.colorScheme.outline
+                    )
+                ) {
                     Icon(
                         imageVector = Icons.Default.Delete,
                         contentDescription = "Excluir"

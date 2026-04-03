@@ -56,5 +56,9 @@ fun PhoneNumberField(
 @Preview(showBackground = true)
 @Composable
 fun PhoneNumberFieldPreview() {
-    PhoneNumberField(modifier = Modifier.padding(16.dp), customerPhoneNumber = "99999999999", null) {}
+    PhoneNumberField(
+        modifier = Modifier.padding(16.dp),
+        customerPhoneNumber = "99999999999",
+        null
+    ) {}
 }

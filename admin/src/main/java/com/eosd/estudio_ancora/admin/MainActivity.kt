@@ -12,7 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.eosd.estudio_ancora.admin.views.screens.AdminServices
+import com.eosd.estudio_ancora.admin.views.components.AdminApp
 import com.eosd.estudio_ancora.views.theme.Estudio_ancoraTheme
 
 class MainActivity : ComponentActivity() {
@@ -21,9 +21,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             Estudio_ancoraTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    AdminServices(modifier = Modifier.padding(innerPadding))
-                }
+                AdminApp()
             }
         }
     }

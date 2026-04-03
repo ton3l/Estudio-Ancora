@@ -6,18 +6,24 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FilterList
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.eosd.estudio_ancora.admin.views.components.BookingFilterBottomSheet
 import com.eosd.estudio_ancora.domain.Customer
 import com.eosd.estudio_ancora.domain.Service
 import com.eosd.estudio_ancora.states.BookingFormState
@@ -25,34 +31,38 @@ import com.eosd.estudio_ancora.views.components.AppButton
 import com.eosd.estudio_ancora.views.components.BookingSummary
 import java.time.LocalDateTime
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BookingHistory(
-    modifier: Modifier = Modifier
+fun AdminBookingHistory(
+    modifier: Modifier = Modifier.Companion
 ) {
+    val sheetState = rememberModalBottomSheetState()
+    var showBottomSheet by rememberSaveable { mutableStateOf(false) }
+
     Surface(
         modifier = modifier
             .fillMaxSize()
     ) {
-        Column (
-            modifier = Modifier
+        Column(
+            modifier = Modifier.Companion
                 .fillMaxSize()
                 .padding(16.dp)
                 .verticalScroll(rememberScrollState()),
-            horizontalAlignment = Alignment.CenterHorizontally,
+            horizontalAlignment = Alignment.Companion.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(24.dp),
         ) {
             // Header with Filter Button
             Row(
-                modifier = Modifier
+                modifier = Modifier.Companion
                     .fillMaxSize(),
                 horizontalArrangement = Arrangement.Start,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.Companion.CenterVertically
             ) {
                 AppButton(
-                    modifier = Modifier
+                    modifier = Modifier.Companion
                         .height(40.dp),
                     text = "Filtrar",
-                    onClick = { /* TODO: Open Filter Bottom Sheet */ },
+                    onClick = { showBottomSheet = true },
                     leadingIcon = @Composable {
                         Icon(
                             imageVector = Icons.Default.FilterList,
@@ -83,18 +93,25 @@ fun BookingHistory(
 
             mockBookings.forEach { bookingInfo ->
                 BookingSummary(
-                    modifier = Modifier,
+                    modifier = Modifier.Companion,
                     actions = true,
                     bookingInfo = bookingInfo,
                     onDeleteBooking = { /* TODO */ }
                 )
             }
         }
+
+        if (showBottomSheet) {
+            BookingFilterBottomSheet(
+                sheetState = sheetState,
+                onDismiss = { showBottomSheet = false }
+            )
+        }
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun BookingHistoryPreview() {
-    BookingHistory()
+fun AdminBookingHistoryPreview() {
+    AdminBookingHistory()
 }
