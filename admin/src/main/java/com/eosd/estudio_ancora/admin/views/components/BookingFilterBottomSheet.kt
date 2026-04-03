@@ -111,7 +111,6 @@ fun FilterTimeInput() {
     }
 
     val timePickerState = rememberTimePickerState(
-        initialHour = currentTime.get(Calendar.HOUR_OF_DAY),
         is24Hour = true,
     )
 

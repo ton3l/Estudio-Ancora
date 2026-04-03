@@ -36,8 +36,8 @@ import java.util.Locale
 @Composable
 fun Calendar(selectedDay: LocalDate?, onDaySelected: (CalendarDay) -> Unit) {
     val currentMonth = remember { YearMonth.now() }
-    val startMonth = remember { currentMonth.minusMonths(0) }
-    val endMonth = remember { currentMonth.plusMonths(3) }
+    val startMonth = remember { currentMonth }
+    val endMonth = remember { currentMonth.withMonth(12) }
     val firstDayOfWeek = remember { firstDayOfWeekFromLocale() }
     val today = remember { LocalDate.now() }
 

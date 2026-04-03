@@ -39,7 +39,7 @@ fun GenericDisplayEntity(
         ) {
             Text(
                 text = title,
-                style = MaterialTheme.typography.bodyLarge
+                style = MaterialTheme.typography.titleLarge,
             )
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)

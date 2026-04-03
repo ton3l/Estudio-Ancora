@@ -4,7 +4,7 @@ import android.icu.text.SimpleDateFormat
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.waitForUpOrCancellation
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.DatePicker
@@ -22,6 +22,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.unit.dp
 import java.util.Date
 import java.util.Locale
 
@@ -33,14 +34,14 @@ fun InlineDatePicker(modifier: Modifier = Modifier) {
     OutlinedTextField(
         value = selectedDate?.let { convertMillisToDate(it) } ?: "",
         onValueChange = { },
-        label = { Text("Selecione uma data") },
+        label = { Text("Data") },
         readOnly = true,
         placeholder = { Text("MM/DD/YYYY") },
         leadingIcon = {
             Icon(Icons.Default.DateRange, contentDescription = "Select date")
         },
         modifier = modifier
-            .fillMaxWidth()
+            .width(184.dp)
             .pointerInput(selectedDate) {
                 awaitEachGesture {
                     awaitFirstDown(pass = PointerEventPass.Initial)

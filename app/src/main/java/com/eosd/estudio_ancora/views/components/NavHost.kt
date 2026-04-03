@@ -6,6 +6,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -81,10 +82,16 @@ fun App() {
                 composable(Routes.BOOKING_DATE_SELECT) {
                     val sharedViewModel = getSharedViewModel(navController, Routes.BOOKING_FLOW)
                     BookingDateSelect(
-                        paddingValues = innerPadding,
+                        paddingValues = PaddingValues(
+                            top = innerPadding.calculateTopPadding(),
+                            bottom = 0.dp
+                        ),
                         viewModel = sharedViewModel,
                         onBackPressed = { navController.popBackStack() },
-                        onDateTimeSelected = { navController.navigate(Routes.BOOKING_FORM) }
+                        onDateTimeSelected = { navController.navigate(Routes.BOOKING_FORM) },
+                        availableTimesHandler = { state, onSelected -> 
+                            AppAvailableTimesHandler(state, onSelected) 
+                        }
                     )
                 }
                 composable(Routes.BOOKING_FORM) {

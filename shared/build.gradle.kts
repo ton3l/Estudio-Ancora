@@ -42,6 +42,8 @@ dependencies {
     // UI e Compose para o módulo shared (Temas, Cores, Componentes Compartilhados)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.lifecycle.runtime.compose)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.compose.ui)
@@ -52,6 +54,7 @@ dependencies {
     implementation(libs.androidx.compose.foundation)
     implementation(libs.androidx.compose.ui.text)
     implementation(libs.androidx.compose.material.icons.extended)
+    implementation(libs.kizitonwose.calendar.compose)
     
     coreLibraryDesugaring(libs.desugar.jdk.libs)
     

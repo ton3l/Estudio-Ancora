@@ -11,14 +11,15 @@ object DayService {
 
         val dayAvailableTimes = if (dayEntity.open) dayEntity.timeSlots else emptyList()
 
-        val availableTimes = AvailableTimesState.Success(
-            availableTimes = dayAvailableTimes
-                .filter { !it.booked }
-                .filter { it.hour.atDate(day) > LocalDateTime.now() }
-                .map { it.hour }
-                .sorted()
-        )
+        val sortedTimes = dayAvailableTimes.sortedBy { it.hour }
+        
+        val availableTimesMap = sortedTimes.associate { timeSlot ->
+            val isAvailable = !timeSlot.booked && timeSlot.hour.atDate(day) > LocalDateTime.now()
+            timeSlot.hour to isAvailable
+        }
 
-        return availableTimes
+        return AvailableTimesState.Success(
+            availableTimes = availableTimesMap
+        )
     }
 }

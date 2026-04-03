@@ -1,45 +1,45 @@
-# Estrutura de Módulos
+# Module Structure
 
-Este projeto utiliza uma arquitetura multi-módulo para separar responsabilidades, melhorar o tempo de compilação e garantir que a lógica de negócio seja independente da interface visual.
+This project utilizes a multi-module architecture to separate responsibilities, improve compilation time, and ensure that the business logic remains independent of the visual interface.
 
-## Módulos
+## Modules
 
 ### 1. `:core` (Android Library)
-O "coração" da aplicação. Contém toda a lógica que não depende diretamente de elementos visuais complexos.
-- **Responsabilidades:**
-    - `domain/`: Entidades puras de negócio (ex: `Booking`, `Service`).
-    - `models/`: Acesso a dados, Firestore e DTOs.
-    - `services/`: Regras de negócio e orquestração (ex: `BookingService`).
-    - `libs/`: Configurações de infraestrutura (Firestore, DataStore).
-    - `validators/`: Lógica de validação de formulários e dados.
-    - `core.states/`: Definições de estados da aplicação (Sealed Interfaces e Data Classes).
-- **Dependências:** Firebase, Coroutines, DataStore.
+The "heart" of the application. It contains all the logic that does not directly depend on complex visual elements.
+- **Responsibilities:**
+    - `domain/`: Pure business entities (e.g., `Booking`, `Service`).
+    - `models/`: Data access, Firestore, and DTOs.
+    - `services/`: Business rules and orchestration (e.g., `BookingService`).
+    - `libs/`: Infrastructure configurations (Firestore, DataStore).
+    - `validators/`: Form and data validation logic.
+    - `core.states/`: Application state definitions (Sealed Interfaces and Data Classes).
+- **Dependencies:** Firebase, Coroutines, DataStore.
 
 ### 2. `:shared` (Android Library)
-Recursos e componentes de UI que são reaproveitados tanto pelo app do cliente quanto pelo admin.
-- **Responsabilidades:**
-    - `views/`: Temas (Theme.kt), Cores (Color.kt) e Tipografia (Type.kt).
-    - `utils/`: Formatadores de moeda, data e transformações visuais.
-    - Componentes Compose globais.
-- **Dependências:** Depende de `:core` (via `api`) e Jetpack Compose.
+Resources and UI components that are reused by both the customer app and the admin app.
+- **Responsibilities:**
+    - `views/`: Themes (Theme.kt), Colors (Color.kt), and Typography (Type.kt).
+    - `utils/`: Currency and date formatters, and visual transformations.
+    - Global Compose components.
+- **Dependencies:** Depends on `:core` (via `api`) and Jetpack Compose.
 
 ### 3. `:app` (Android Application)
-O aplicativo principal destinado aos clientes da barbearia.
-- **Responsabilidades:**
-    - Telas de agendamento, histórico e perfil do cliente.
-    - ViewModels específicas da jornada do cliente.
-- **Dependências:** Depende de `:shared`.
+The main application intended for the barbershop's customers.
+- **Responsibilities:**
+    - Booking, history, and customer profile screens.
+    - ViewModels specific to the customer journey.
+- **Dependencies:** Depends on `:shared`.
 
 ### 4. `:admin` (Android Application)
-O aplicativo de gestão destinado ao proprietário/administrador.
-- **Responsabilidades:**
-    - Gestão de horários, visualização de agenda geral e configuração de serviços.
-    - ViewModels específicas de administração.
-- **Dependências:** Depende de `:shared`.
+The management application intended for the owner/administrator.
+- **Responsibilities:**
+    - Time management, general schedule view, and service configuration.
+    - ViewModels specific to administration.
+- **Dependencies:** Depends on `:shared`.
 
-## Hierarquia de Dependências
+## Dependency Hierarchy
 
-A comunicação entre os módulos segue este fluxo:
+Communication between modules follows this flow:
 
 ```mermaid
 graph TD
@@ -48,9 +48,9 @@ graph TD
     S --> C[:core]
 ```
 
-> **Nota Técnica:** O módulo `:shared` utiliza a configuração `api(project(":core"))`. Isso significa que qualquer módulo que dependa de `:shared` terá acesso automático às classes do `:core`, sem a necessidade de importá-lo explicitamente.
+> **Technical Note:** The `:shared` module uses the `api(project(":core"))` configuration. This means any module that depends on `:shared` will have automatic access to the classes in `:core` without needing to import it explicitly.
 
-## Benefícios desta Estrutura
-1. **Isolamento:** Alterações na UI do admin não afetam o app do cliente.
-2. **Reutilização:** Toda a lógica de comunicação com o Firebase está em um só lugar (`:core`).
-3. **Testabilidade:** É possível testar o `:core` de forma isolada, sem carregar bibliotecas de UI.
+## Benefits of this Structure
+1. **Isolation:** Changes in the admin UI do not affect the customer app.
+2. **Reuse:** All Firebase communication logic is in one place (`:core`).
+3. **Testability:** It is possible to test `:core` in isolation without loading UI libraries.
