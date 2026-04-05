@@ -4,6 +4,8 @@ import com.eosd.estudio_ancora.domain.Booking
 import com.eosd.estudio_ancora.libs.firestore
 import com.eosd.estudio_ancora.models.booking.dtos.BookingDocument
 import com.google.firebase.firestore.FieldPath
+import com.google.firebase.firestore.Query
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.toObject
 import com.google.firebase.firestore.toObjects
 import kotlinx.coroutines.tasks.await
@@ -33,6 +35,18 @@ object BookingModel {
         if (bookingIds.isEmpty()) return emptyList()
         val bookingDocs = bookingCollection
             .whereIn(FieldPath.documentId(), bookingIds)
+            .get()
+            .await()
+            .toObjects<BookingDocument>()
+
+        return bookingDocs.map { it.toEntity() }
+    }
+
+    suspend fun getAllFutureBookings(): List<Booking> {
+        val now = Timestamp.now()
+        val bookingDocs = bookingCollection
+            .whereGreaterThanOrEqualTo("dateTime", now)
+            .orderBy("dateTime", Query.Direction.ASCENDING)
             .get()
             .await()
             .toObjects<BookingDocument>()

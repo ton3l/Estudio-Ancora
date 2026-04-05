@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -23,19 +24,25 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.eosd.estudio_ancora.admin.views.components.BookingFilterBottomSheet
-import com.eosd.estudio_ancora.domain.Customer
-import com.eosd.estudio_ancora.domain.Service
+import com.eosd.estudio_ancora.admin.views.viewModels.AdminBookingHistoryViewModel
 import com.eosd.estudio_ancora.states.BookingFormState
 import com.eosd.estudio_ancora.views.components.AppButton
 import com.eosd.estudio_ancora.views.components.BookingSummary
-import java.time.LocalDateTime
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AdminBookingHistory(
-    modifier: Modifier = Modifier.Companion
+    modifier: Modifier = Modifier.Companion,
+    viewModel: AdminBookingHistoryViewModel = viewModel()
 ) {
+    val bookings by viewModel.filteredBookings.collectAsStateWithLifecycle()
+    val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
+    val filterFormState by viewModel.filterFormState.collectAsStateWithLifecycle()
+    val serviceList by viewModel.serviceList.collectAsStateWithLifecycle()
+
     val sheetState = rememberModalBottomSheetState()
     var showBottomSheet by rememberSaveable { mutableStateOf(false) }
 
@@ -54,7 +61,7 @@ fun AdminBookingHistory(
             // Header with Filter Button
             Row(
                 modifier = Modifier.Companion
-                    .fillMaxSize(),
+                    .fillMaxWidth(),
                 horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.Companion.CenterVertically
             ) {
@@ -72,31 +79,16 @@ fun AdminBookingHistory(
                 )
             }
 
-            // Mock List of BookingSummaries
-            val mockBookings = listOf(
-                BookingFormState(
-                    dateTime = LocalDateTime.now().plusDays(1),
-                    customer = Customer(name = "João Silva", phoneNumber = "11987654321"),
-                    service = Service(
-                        id = "1",
-                        name = "Corte de Cabelo",
-                        duration = 30,
-                        price = 50.0
-                    )
-                ),
-                BookingFormState(
-                    dateTime = LocalDateTime.now().plusDays(2),
-                    customer = Customer(name = "Maria Souza", phoneNumber = "11912345678"),
-                    service = Service(id = "2", name = "Barba", duration = 20, price = 30.0)
-                )
-            )
-
-            mockBookings.forEach { bookingInfo ->
+            bookings.forEach { booking ->
                 BookingSummary(
                     modifier = Modifier.Companion,
                     actions = true,
-                    bookingInfo = bookingInfo,
-                    onDeleteBooking = { /* TODO */ }
+                    bookingInfo = BookingFormState(
+                        dateTime = booking.dateTime,
+                        customer = booking.customer,
+                        service = booking.service
+                    ),
+                    onDeleteBooking = { viewModel.deleteBooking(booking) }
                 )
             }
         }
@@ -104,6 +96,14 @@ fun AdminBookingHistory(
         if (showBottomSheet) {
             BookingFilterBottomSheet(
                 sheetState = sheetState,
+                filterState = filterFormState,
+                serviceList = serviceList,
+                onNameFilterChanged = viewModel::onCustomerNameFilterChanged,
+                onServiceFilterChanged = viewModel::onServiceFilterChanged,
+                onDateFilterChanged = viewModel::onDateFilterChanged,
+                onTimeFilterChanged = viewModel::onTimeFilterChanged,
+                onApplyFilters = viewModel::applyFilters,
+                onClearFilters = viewModel::clearFilters,
                 onDismiss = { showBottomSheet = false }
             )
         }

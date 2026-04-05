@@ -63,6 +63,30 @@ object BookingService {
         return ActiveBookingsState.Success(activeBookings.sortedBy { it.dateTime })
     }
 
+    suspend fun getAllFutureBookings(): List<Booking> {
+        return BookingModel.getAllFutureBookings()
+    }
+
+    suspend fun deleteBookingByAdmin(booking: Booking) {
+        firestore.runTransaction { transaction ->
+            val date = booking.dateTime.toLocalDate()
+            val dayRef = DayModel.getDayRef(date)
+            val daySnapshot = transaction.get(dayRef)
+
+            if (!daySnapshot.exists()) {
+                throw IllegalStateException("Cannot delete booking: Day document does not exist.")
+            }
+
+            val dayEntity = daySnapshot.toObject<DayDocument>()!!.toEntity()
+            val updatedDay = dayEntity.unbookTimeSlot(booking)
+
+            transaction.set(dayRef, DayDocument.toDocument(updatedDay))
+            transaction.delete(BookingModel.getBookingRef(booking.id))
+
+            null
+        }.await()
+    }
+
     suspend fun deleteBooking(context: Context, booking: Booking) {
         firestore.runTransaction { transaction ->
             val date = booking.dateTime.toLocalDate()

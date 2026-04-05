@@ -27,22 +27,25 @@ import java.util.Date
 import java.util.Locale
 
 @Composable
-fun InlineDatePicker(modifier: Modifier = Modifier) {
-    var selectedDate by remember { mutableStateOf<Long?>(null) }
+fun InlineDatePicker(
+    selectedDateMillis: Long?,
+    onDateSelected: (Long?) -> Unit,
+    modifier: Modifier = Modifier
+) {
     var showModal by remember { mutableStateOf(false) }
 
     OutlinedTextField(
-        value = selectedDate?.let { convertMillisToDate(it) } ?: "",
+        value = selectedDateMillis?.let { convertMillisToDate(it) } ?: "",
         onValueChange = { },
         label = { Text("Data") },
         readOnly = true,
-        placeholder = { Text("MM/DD/YYYY") },
+        placeholder = { Text("DD/MM/YYYY") },
         leadingIcon = {
             Icon(Icons.Default.DateRange, contentDescription = "Select date")
         },
         modifier = modifier
             .width(184.dp)
-            .pointerInput(selectedDate) {
+            .pointerInput(selectedDateMillis) {
                 awaitEachGesture {
                     awaitFirstDown(pass = PointerEventPass.Initial)
                     val upEvent = waitForUpOrCancellation(pass = PointerEventPass.Initial)
@@ -55,17 +58,21 @@ fun InlineDatePicker(modifier: Modifier = Modifier) {
 
     if (showModal) {
         DatePickerModal(
-            onDateSelected = { selectedDate = it },
+            initialSelectedDateMillis = selectedDateMillis,
+            onDateSelected = onDateSelected,
             onDismiss = { showModal = false }
         )
     }
 }
 @Composable
 fun DatePickerModal(
+    initialSelectedDateMillis: Long?,
     onDateSelected: (Long?) -> Unit,
     onDismiss: () -> Unit
 ) {
-    val datePickerState = rememberDatePickerState()
+    val datePickerState = rememberDatePickerState(
+        initialSelectedDateMillis = initialSelectedDateMillis
+    )
 
     DatePickerDialog(
         onDismissRequest = onDismiss,
