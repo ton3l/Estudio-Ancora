@@ -1,10 +1,11 @@
 package com.eosd.estudio_ancora
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.google.firebase.Firebase
-import com.google.firebase.firestore.firestore
+import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.tasks.await
+import org.junit.Before
 import org.junit.FixMethodOrder
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -14,8 +15,14 @@ import org.junit.runners.MethodSorters
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 class ServiceSeederTest {
 
-    private val db = Firebase.firestore
-    private val servicesCollection = db.collection("services")
+    private lateinit var db: FirebaseFirestore
+    private lateinit var servicesCollection: CollectionReference
+
+    @Before
+    fun setUp() {
+        db = FirebaseFirestore.getInstance()
+        servicesCollection = db.collection("services")
+    }
 
     @Test
     fun a_seedServices() = runBlocking {

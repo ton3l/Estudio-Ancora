@@ -8,6 +8,9 @@ import com.eosd.estudio_ancora.models.day.DayModel
 import com.eosd.estudio_ancora.states.BookingFormState
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.*
+import com.eosd.estudio_ancora.libs.firestore
+import kotlinx.coroutines.tasks.await
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import java.time.LocalDateTime
@@ -18,6 +21,14 @@ import java.time.LocalDateTime
  */
 @RunWith(AndroidJUnit4::class)
 class BookingServiceTest {
+
+    @Before
+    fun setUp() {
+        runBlocking {
+            val testDate = LocalDateTime.now().plusDays(10).toLocalDate()
+            firestore.collection("booking-days").document(testDate.toString()).delete().await()
+        }
+    }
 
     @Test
     fun addBooking_shouldUpdateDayStateAndCreateBookingRecord() = runBlocking {

@@ -2,17 +2,17 @@ package com.eosd.estudio_ancora
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.eosd.estudio_ancora.views.utils.toHHmm
-import com.google.firebase.Firebase
-import com.google.firebase.firestore.firestore
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.tasks.await
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import java.time.LocalTime
 
 @RunWith(AndroidJUnit4::class)
 class FirestoreSeederTest {
-    val db = Firebase.firestore
+    lateinit var db: FirebaseFirestore
     val ids = arrayOf(
         "monday",
         "tuesday",
@@ -22,6 +22,11 @@ class FirestoreSeederTest {
         "saturday",
         "sunday"
     )
+
+    @Before
+    fun setUp() {
+        db = FirebaseFirestore.getInstance()
+    }
 
     @Test
     fun seedDatabase() = runBlocking {
@@ -61,13 +66,13 @@ class FirestoreSeederTest {
         println("=== END SEED ===")
     }
 
-    @Test
-    fun cleanWeekAvailableTimes() = runBlocking {
-        ids.forEach { weekDay ->
-            db.collection("week-available-times")
-                .document(weekDay)
-                .delete()
-                .await()
-        }
-    }
+//    @Test
+//    fun cleanWeekAvailableTimes() = runBlocking {
+//        ids.forEach { weekDay ->
+//            db.collection("week-available-times")
+//                .document(weekDay)
+//                .delete()
+//                .await()
+//        }
+//    }
 }

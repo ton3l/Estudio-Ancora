@@ -69,8 +69,64 @@ class BookingModelTest {
             testService.name,
             savedBooking?.service?.name
         )
+    }
 
-        // 4. Cleanup: Opcional, remover o documento de teste para manter o banco limpo
-        // docRef.delete().await()
+    @Test
+    fun getBooking_returnsCorrectBooking() = runBlocking {
+        // Arrange
+        val testBookingId = UUID.randomUUID().toString()
+        val testBooking = createTestBooking(testBookingId)
+        BookingModel.createBooking(testBooking)
+
+        // Act
+        val result = BookingModel.getBooking(testBookingId)
+
+        // Assert
+        assertEquals(testBookingId, result.id)
+        assertEquals(testBooking.customer.name, result.customer.name)
+    }
+
+    @Test
+    fun getBookings_returnsListOfBookings() = runBlocking {
+        // Arrange
+        val id1 = UUID.randomUUID().toString()
+        val id2 = UUID.randomUUID().toString()
+        val b1 = createTestBooking(id1)
+        val b2 = createTestBooking(id2)
+        BookingModel.createBooking(b1)
+        BookingModel.createBooking(b2)
+
+        // Act
+        val results = BookingModel.getBookings(listOf(id1, id2))
+
+        // Assert
+        assertEquals(2, results.size)
+        assertTrue(results.any { it.id == id1 })
+        assertTrue(results.any { it.id == id2 })
+    }
+
+    @Test
+    fun deleteBooking_removesFromFirestore() = runBlocking {
+        // Arrange
+        val testBookingId = UUID.randomUUID().toString()
+        val testBooking = createTestBooking(testBookingId)
+        BookingModel.createBooking(testBooking)
+
+        // Act
+        BookingModel.deleteBooking(testBooking)
+
+        // Assert
+        val docRef = firestore.collection("bookings").document(testBookingId)
+        val snapshot = docRef.get().await()
+        assertTrue("O documento não deveria mais existir no Firestore", !snapshot.exists())
+    }
+
+    private fun createTestBooking(id: String): Booking {
+        return Booking(
+            id = id,
+            customer = Customer(name = "John Doe", phoneNumber = "1234567890"),
+            dateTime = LocalDateTime.now().withNano(0),
+            service = Service(id = "service-id", name = "Service", duration = 30, price = 50.0)
+        )
     }
 }
