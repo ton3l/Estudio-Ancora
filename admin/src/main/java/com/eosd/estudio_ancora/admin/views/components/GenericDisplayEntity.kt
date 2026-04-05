@@ -24,7 +24,8 @@ fun GenericDisplayEntity(
     title: String,
     onEditClick: () -> Unit,
     onDeleteClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    canDelete: Boolean = true
 ) {
     Surface(
         modifier = modifier.fillMaxWidth(),
@@ -55,16 +56,18 @@ fun GenericDisplayEntity(
                         contentDescription = "Editar"
                     )
                 }
-                IconButton(
-                    onClick = onDeleteClick,
-                    colors = IconButtonDefaults.iconButtonColors(
-                        contentColor = MaterialTheme.colorScheme.outline
-                    )
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Delete,
-                        contentDescription = "Excluir"
-                    )
+                if (canDelete) {
+                    IconButton(
+                        onClick = onDeleteClick,
+                        colors = IconButtonDefaults.iconButtonColors(
+                            contentColor = MaterialTheme.colorScheme.outline
+                        )
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Delete,
+                            contentDescription = "Excluir"
+                        )
+                    }
                 }
             }
         }

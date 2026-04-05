@@ -15,17 +15,23 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.eosd.estudio_ancora.admin.views.components.AdminTimesBottomSheet
 import com.eosd.estudio_ancora.admin.views.components.GenericDisplayEntity
+import com.eosd.estudio_ancora.admin.views.viewModels.AdminTimesViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AdminTimes(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: AdminTimesViewModel = viewModel()
 ) {
     val sheetState = rememberModalBottomSheetState()
     var showBottomSheet by rememberSaveable { mutableStateOf(false) }
-    var selectedDay by rememberSaveable { mutableStateOf("") }
+
+    val weekRules by viewModel.weekRules.collectAsStateWithLifecycle()
+    val selectedDayRule by viewModel.selectedDayRule.collectAsStateWithLifecycle()
 
     Surface(
         modifier = modifier.fillMaxSize()
@@ -35,32 +41,33 @@ fun AdminTimes(
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
         ) {
-            val daysOfWeek = listOf(
-                "Domingo",
-                "Segunda-feira",
-                "Terça-feira",
-                "Quarta-feira",
-                "Quinta-feira",
-                "Sexta-feira",
-                "Sábado"
-            )
-
-            daysOfWeek.forEach { day ->
+            weekRules.forEach { rule ->
+                val dayName = viewModel.dayTranslations[rule.weekDay] ?: rule.weekDay
                 GenericDisplayEntity(
-                    title = day,
+                    title = dayName,
+                    canDelete = false,
                     onEditClick = {
-                        selectedDay = day
+                        viewModel.selectDay(rule.weekDay)
                         showBottomSheet = true
                     },
-                    onDeleteClick = { /* TODO: handle delete/clear */ }
+                    onDeleteClick = { }
                 )
                 HorizontalDivider()
             }
         }
 
-        if (showBottomSheet) {
+        if (showBottomSheet && selectedDayRule != null) {
             AdminTimesBottomSheet(
-                dayName = selectedDay,
+                dayName = viewModel.dayTranslations[selectedDayRule!!.weekDay] ?: selectedDayRule!!.weekDay,
+                isOpen = selectedDayRule!!.open,
+                timeSlots = selectedDayRule!!.timeSlots,
+                onToggleOpen = viewModel::toggleDayOpen,
+                onToggleTimeSlot = viewModel::toggleTimeSlot,
+                onSave = {
+                    viewModel.saveSelectedDay {
+                        showBottomSheet = false
+                    }
+                },
                 sheetState = sheetState,
                 onDismiss = { showBottomSheet = false }
             )

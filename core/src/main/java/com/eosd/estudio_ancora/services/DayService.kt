@@ -22,4 +22,12 @@ object DayService {
             availableTimes = availableTimesMap
         )
     }
+
+    suspend fun getWeekRules(): List<com.eosd.estudio_ancora.models.day.dtos.WeekDayAvailableTimes> {
+        return DayModel.getAllWeekDayAvailableTimes()
+    }
+
+    suspend fun updateWeekRule(weekDay: com.eosd.estudio_ancora.models.day.dtos.WeekDayAvailableTimes) {
+        DayModel.updateWeekDayAvailableTime(weekDay)
+    }
 }

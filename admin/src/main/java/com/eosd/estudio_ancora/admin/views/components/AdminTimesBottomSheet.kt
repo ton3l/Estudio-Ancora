@@ -28,6 +28,11 @@ import com.eosd.estudio_ancora.views.components.AppButton
 @Composable
 fun AdminTimesBottomSheet(
     dayName: String,
+    isOpen: Boolean,
+    timeSlots: Map<String, Boolean>,
+    onToggleOpen: (Boolean) -> Unit,
+    onToggleTimeSlot: (String, Boolean) -> Unit,
+    onSave: () -> Unit,
     sheetState: SheetState,
     onDismiss: () -> Unit
 ) {
@@ -52,17 +57,32 @@ fun AdminTimesBottomSheet(
         ) {
 
             // Special row for "Aberto"
-            TimeSlotRow(label = "Aberto", isChecked = true)
+            TimeSlotRow(
+                label = "Aberto", 
+                isChecked = isOpen,
+                onCheckedChange = { onToggleOpen(it) }
+            )
 
-            // Time slots from 7 to 21
-            (7..21).forEach { hour ->
-                TimeSlotRow(label = "$hour horas", isChecked = true)
+            // Dynamic time slots
+            if (isOpen) {
+                // Ensure correct chronological order since keys are strings "HH:MM"
+                val sortedSlots = timeSlots.keys.sorted()
+                
+                sortedSlots.forEach { timeStr ->
+                    TimeSlotRow(
+                        label = "$timeStr horas", 
+                        isChecked = timeSlots[timeStr] ?: false,
+                        onCheckedChange = { isChecked ->
+                            onToggleTimeSlot(timeStr, isChecked)
+                        }
+                    )
+                }
             }
 
             AppButton(
                 modifier = Modifier.fillMaxWidth(),
                 text = "Aplicar",
-                onClick = { onDismiss() }
+                onClick = onSave
             )
         }
     }
@@ -71,7 +91,8 @@ fun AdminTimesBottomSheet(
 @Composable
 fun TimeSlotRow(
     label: String,
-    isChecked: Boolean
+    isChecked: Boolean,
+    onCheckedChange: (Boolean) -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -82,7 +103,7 @@ fun TimeSlotRow(
     ) {
         Checkbox(
             checked = isChecked,
-            onCheckedChange = { }
+            onCheckedChange = onCheckedChange
         )
         Text(
             text = label,
@@ -99,6 +120,14 @@ fun TimeSlotRow(
 fun AdminTimesBottomSheetPreview() {
     val sheetState = rememberModalBottomSheetState()
     Column() {
-        AdminTimesBottomSheet("Segunda", sheetState) { }
+        AdminTimesBottomSheet(
+            dayName = "Segunda", 
+            isOpen = true,
+            timeSlots = mapOf("07:00" to true, "08:00" to false),
+            onToggleOpen = {},
+            onToggleTimeSlot = { _, _ -> },
+            onSave = {},
+            sheetState = sheetState
+        ) { }
     }
 }

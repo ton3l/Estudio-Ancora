@@ -60,4 +60,16 @@ object DayModel {
             .set(dayDocument) // TODO Bug fix
             .await()
     }
+
+    suspend fun getAllWeekDayAvailableTimes(): List<WeekDayAvailableTimes> {
+        val snapshot = weekAvailableTimesCollection.get().await()
+        return snapshot.toObjects(WeekDayAvailableTimes::class.java)
+    }
+
+    suspend fun updateWeekDayAvailableTime(weekDay: WeekDayAvailableTimes) {
+        weekAvailableTimesCollection
+            .document(weekDay.weekDay)
+            .set(weekDay)
+            .await()
+    }
 }
