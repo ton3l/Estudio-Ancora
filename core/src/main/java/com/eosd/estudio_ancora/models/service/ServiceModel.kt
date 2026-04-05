@@ -15,4 +15,18 @@ object ServiceModel {
             .toObjects<ServiceDocument>()
             .map { it.toEntity() }
     }
+
+    suspend fun addService(service: Service) {
+        val serviceDocument = ServiceDocument.toDocument(service)
+        servicesCollection.document(service.id).set(serviceDocument).await()
+    }
+
+    suspend fun updateService(service: Service) {
+        val serviceDocument = ServiceDocument.toDocument(service)
+        servicesCollection.document(service.id).set(serviceDocument).await()
+    }
+
+    suspend fun deleteService(serviceId: String) {
+        servicesCollection.document(serviceId).delete().await()
+    }
 }

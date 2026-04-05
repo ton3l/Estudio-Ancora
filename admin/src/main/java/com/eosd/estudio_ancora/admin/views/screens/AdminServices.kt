@@ -30,16 +30,24 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.eosd.estudio_ancora.admin.views.components.AdminServiceBottomSheet
 import com.eosd.estudio_ancora.admin.views.components.GenericDisplayEntity
+import com.eosd.estudio_ancora.admin.views.viewModels.AdminServicesViewModel
 import com.eosd.estudio_ancora.views.components.TextInput
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AdminServices(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: AdminServicesViewModel = viewModel()
 ) {
-    var searchQuery by remember { mutableStateOf("") }
+    val searchQuery by viewModel.searchQuery.collectAsStateWithLifecycle()
+    val filteredServices by viewModel.filteredServices.collectAsStateWithLifecycle()
+    val serviceFormState by viewModel.serviceFormState.collectAsStateWithLifecycle()
+    val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
+
     val sheetState = rememberModalBottomSheetState()
     var showBottomSheet by rememberSaveable { mutableStateOf(false) }
     var bottomSheetTitle by rememberSaveable { mutableStateOf("") }
@@ -65,12 +73,13 @@ fun AdminServices(
                         valueError = null,
                         label = "Pesquisar",
                         leadingIcon = Icons.Default.Search,
-                        onValueChanged = { searchQuery = it }
+                        onValueChanged = { viewModel.onSearchQueryChanged(it) }
                     )
                 }
                
                 IconButton(
                     onClick = {
+                        viewModel.openServiceForm(null)
                         bottomSheetTitle = "Adicionar Serviço"
                         showBottomSheet = true
                     },
@@ -96,23 +105,15 @@ fun AdminServices(
                     .weight(1f)
                     .verticalScroll(rememberScrollState())
             ) {
-                val mockServices = listOf(
-                    "Corte de Cabelo",
-                    "Barba",
-                    "Sobrancelha",
-                    "Corte e Barba",
-                    "Platinado",
-                    "Luzes"
-                )
-
-                mockServices.forEach { serviceName ->
+                filteredServices.forEach { service ->
                     GenericDisplayEntity(
-                        title = serviceName,
+                        title = service.name,
                         onEditClick = {
+                            viewModel.openServiceForm(service)
                             bottomSheetTitle = "Editar Serviço"
                             showBottomSheet = true
                         },
-                        onDeleteClick = { /* TODO: Delete Service */ }
+                        onDeleteClick = { viewModel.deleteService(service.id) }
                     )
                     HorizontalDivider()
                 }
@@ -123,6 +124,15 @@ fun AdminServices(
             AdminServiceBottomSheet(
                 title = bottomSheetTitle,
                 sheetState = sheetState,
+                formState = serviceFormState,
+                onNameChanged = viewModel::onNameChanged,
+                onPriceChanged = viewModel::onPriceChanged,
+                onDurationChanged = viewModel::onDurationChanged,
+                onSaveClick = {
+                    viewModel.saveService(onSuccess = {
+                        showBottomSheet = false
+                    })
+                },
                 onDismiss = { showBottomSheet = false }
             )
         }

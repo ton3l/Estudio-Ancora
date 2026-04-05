@@ -16,15 +16,12 @@ import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.eosd.estudio_ancora.states.ServiceFormState
 import com.eosd.estudio_ancora.views.components.AppButton
 import com.eosd.estudio_ancora.views.components.TextInput
 import com.eosd.estudio_ancora.views.utils.CurrencyVisualTransformation
@@ -34,13 +31,13 @@ import com.eosd.estudio_ancora.views.utils.CurrencyVisualTransformation
 fun AdminServiceBottomSheet(
     title: String,
     sheetState: SheetState,
+    formState: ServiceFormState,
+    onNameChanged: (String) -> Unit,
+    onPriceChanged: (String) -> Unit,
+    onDurationChanged: (String) -> Unit,
+    onSaveClick: () -> Unit,
     onDismiss: () -> Unit
 ) {
-    // For now we're just building the UI, so empty state is fine.
-    var serviceName by remember { mutableStateOf("") }
-    var servicePrice by remember { mutableStateOf("") }
-    var serviceDuration by remember { mutableStateOf("") }
-
     ModalBottomSheet(
         onDismissRequest = { onDismiss() },
         sheetState = sheetState
@@ -59,16 +56,16 @@ fun AdminServiceBottomSheet(
             )
 
             TextInput(
-                value = serviceName,
-                valueError = null,
+                value = formState.name,
+                valueError = formState.nameError,
                 label = "Nome do Serviço",
                 leadingIcon = Icons.Default.ContentCut,
-                onValueChanged = { serviceName = it }
+                onValueChanged = onNameChanged
             )
 
             TextInput(
-                value = servicePrice,
-                valueError = null,
+                value = formState.price,
+                valueError = formState.priceError,
                 label = "Preço",
                 leadingIcon = Icons.Default.AttachMoney,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
@@ -76,27 +73,28 @@ fun AdminServiceBottomSheet(
                 onValueChanged = { newValue ->
                     // Filtra apenas dígitos decimais
                     val digits = newValue.filter { it.isDigit() }
-                    servicePrice = digits
+                    onPriceChanged(digits)
                 }
             )
 
             TextInput(
-                value = serviceDuration,
-                valueError = null,
-                label = "Duração em Horas",
+                value = formState.duration,
+                valueError = formState.durationError,
+                label = "Duração em Horas (Slots)",
                 leadingIcon = Icons.Default.Timer,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 onValueChanged = { newValue ->
                     // Permite apenas dígitos e limita a 2 caracteres
                     val digits = newValue.filter { it.isDigit() }.take(2)
-                    serviceDuration = digits
+                    onDurationChanged(digits)
                 }
             )
 
             AppButton(
                 modifier = Modifier.width(128.dp),
                 text = "Aplicar",
-                onClick = { onDismiss() }
+                enabled = formState.isFormValid,
+                onClick = onSaveClick
             )
         }
     }
@@ -108,6 +106,15 @@ fun AdminServiceBottomSheet(
 fun AdminServiceBottomSheetPreview() {
     val sheetState = rememberModalBottomSheetState()
     Column() {
-        AdminServiceBottomSheet("Editar Serviço ", sheetState) { }
+        AdminServiceBottomSheet(
+            title = "Editar Serviço ", 
+            sheetState = sheetState,
+            formState = ServiceFormState(),
+            onNameChanged = {},
+            onPriceChanged = {},
+            onDurationChanged = {},
+            onSaveClick = {},
+            onDismiss = {}
+        )
     }
 }
