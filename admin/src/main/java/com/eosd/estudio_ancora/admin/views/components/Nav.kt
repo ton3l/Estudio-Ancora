@@ -27,7 +27,7 @@ fun Nav(navController: NavController, modifier: Modifier = Modifier) {
     val currentDestination = navBackStackEntry?.destination
 
     val options = listOf(
-        Triple(AdminRoutes.BOOKING_FLOW, Icons.Default.Event, "Agendar"),
+        Triple(AdminRoutes.BOOKING_FLOW, Icons.Default.Event, "Agenda"),
         Triple(AdminRoutes.ADMIN_LOGS, Icons.Default.List, "Histórico"),
         Triple(AdminRoutes.ADMIN_TIMES, Icons.Default.Schedule, "Horários"),
         Triple(AdminRoutes.ADMIN_SERVICES, Icons.Default.ContentCut, "Serviços")

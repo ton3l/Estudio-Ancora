@@ -49,8 +49,8 @@ fun AdminTimesBottomSheet(
         )
         Column(
             modifier = Modifier
+                .weight(1f, fill = false)
                 .padding(horizontal = 16.dp, vertical = 8.dp)
-                .padding(bottom = 32.dp)
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
@@ -58,7 +58,7 @@ fun AdminTimesBottomSheet(
 
             // Special row for "Aberto"
             TimeSlotRow(
-                label = "Aberto", 
+                label = "Aberto",
                 isChecked = isOpen,
                 onCheckedChange = { onToggleOpen(it) }
             )
@@ -67,10 +67,10 @@ fun AdminTimesBottomSheet(
             if (isOpen) {
                 // Ensure correct chronological order since keys are strings "HH:MM"
                 val sortedSlots = timeSlots.keys.sorted()
-                
+
                 sortedSlots.forEach { timeStr ->
                     TimeSlotRow(
-                        label = "$timeStr horas", 
+                        label = "$timeStr horas",
                         isChecked = timeSlots[timeStr] ?: false,
                         onCheckedChange = { isChecked ->
                             onToggleTimeSlot(timeStr, isChecked)
@@ -78,9 +78,13 @@ fun AdminTimesBottomSheet(
                     )
                 }
             }
-
+        }
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ) {
             AppButton(
-                modifier = Modifier.fillMaxWidth(),
                 text = "Aplicar",
                 onClick = onSave
             )
@@ -121,7 +125,7 @@ fun AdminTimesBottomSheetPreview() {
     val sheetState = rememberModalBottomSheetState()
     Column() {
         AdminTimesBottomSheet(
-            dayName = "Segunda", 
+            dayName = "Segunda",
             isOpen = true,
             timeSlots = mapOf("07:00" to true, "08:00" to false),
             onToggleOpen = {},

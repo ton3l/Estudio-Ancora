@@ -6,7 +6,7 @@ import java.time.LocalTime
 
 data class BookingFilterState(
     val customerName: String = "",
-    val service: Service? = null,
+    val serviceName: String = "",
     val date: LocalDate? = null,
     val time: String = ""
 )

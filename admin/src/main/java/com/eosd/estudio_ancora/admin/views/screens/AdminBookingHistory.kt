@@ -1,19 +1,20 @@
 package com.eosd.estudio_ancora.admin.views.screens
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Surface
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -32,56 +33,59 @@ import com.eosd.estudio_ancora.states.BookingFormState
 import com.eosd.estudio_ancora.views.components.AppButton
 import com.eosd.estudio_ancora.views.components.BookingSummary
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun AdminBookingHistory(
-    modifier: Modifier = Modifier.Companion,
+    modifier: Modifier = Modifier,
     viewModel: AdminBookingHistoryViewModel = viewModel()
 ) {
     val bookings by viewModel.filteredBookings.collectAsStateWithLifecycle()
     val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
     val filterFormState by viewModel.filterFormState.collectAsStateWithLifecycle()
-    val serviceList by viewModel.serviceList.collectAsStateWithLifecycle()
 
-    val sheetState = rememberModalBottomSheetState()
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     var showBottomSheet by rememberSaveable { mutableStateOf(false) }
 
-    Surface(
-        modifier = modifier
-            .fillMaxSize()
+    PullToRefreshBox(
+        isRefreshing = isLoading,
+        onRefresh = { viewModel.fetchFutureBookings() },
+        modifier = modifier.fillMaxSize()
     ) {
-        Column(
-            modifier = Modifier.Companion
-                .fillMaxSize()
-                .padding(16.dp)
-                .verticalScroll(rememberScrollState()),
-            horizontalAlignment = Alignment.Companion.CenterHorizontally,
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(24.dp),
+            contentPadding = PaddingValues(bottom = 32.dp)
         ) {
-            // Header with Filter Button
-            Row(
-                modifier = Modifier.Companion
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.Start,
-                verticalAlignment = Alignment.Companion.CenterVertically
-            ) {
-                AppButton(
-                    modifier = Modifier.Companion
-                        .height(40.dp),
-                    text = "Filtrar",
-                    onClick = { showBottomSheet = true },
-                    leadingIcon = @Composable {
-                        Icon(
-                            imageVector = Icons.Default.FilterList,
-                            contentDescription = null
-                        )
-                    }
-                )
+            stickyHeader {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(12.dp),
+                    horizontalArrangement = Arrangement.Start,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    AppButton(
+                        modifier = Modifier
+                            .height(40.dp),
+                        text = "Filtrar",
+                        onClick = { showBottomSheet = true },
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Default.FilterList,
+                                contentDescription = null
+                            )
+                        }
+                    )
+                }
             }
 
-            bookings.forEach { booking ->
+            items(
+                items = bookings,
+                key = { it.id }
+            ) { booking ->
                 BookingSummary(
-                    modifier = Modifier.Companion,
+                    modifier = Modifier.padding(horizontal = 16.dp),
                     actions = true,
                     bookingInfo = BookingFormState(
                         dateTime = booking.dateTime,
@@ -97,7 +101,6 @@ fun AdminBookingHistory(
             BookingFilterBottomSheet(
                 sheetState = sheetState,
                 filterState = filterFormState,
-                serviceList = serviceList,
                 onNameFilterChanged = viewModel::onCustomerNameFilterChanged,
                 onServiceFilterChanged = viewModel::onServiceFilterChanged,
                 onDateFilterChanged = viewModel::onDateFilterChanged,

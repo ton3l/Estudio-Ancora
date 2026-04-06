@@ -33,7 +33,7 @@ class FirestoreSeederTest {
         println("=== START SEED ===")
 
         val timeSlots = (6..23).associate { hour ->
-            LocalTime.of(hour, 0).toHHmm() to (hour >= 13)
+            LocalTime.of(hour, 0).toHHmm() to (hour in 8..11 || hour in 18..21)
         }
 
         ids.forEach { weekDay ->

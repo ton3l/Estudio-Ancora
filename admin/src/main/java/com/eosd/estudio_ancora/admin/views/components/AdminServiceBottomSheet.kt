@@ -80,7 +80,7 @@ fun AdminServiceBottomSheet(
             TextInput(
                 value = formState.duration,
                 valueError = formState.durationError,
-                label = "Duração em Horas (Slots)",
+                label = "Duração em Horas",
                 leadingIcon = Icons.Default.Timer,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 onValueChanged = { newValue ->

@@ -10,6 +10,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ContentCut
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -20,19 +21,15 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.eosd.estudio_ancora.domain.Service
 import com.eosd.estudio_ancora.states.BookingFilterState
-import com.eosd.estudio_ancora.views.components.SelectService
 import com.eosd.estudio_ancora.views.components.TextInput
 import java.time.Instant
 import java.time.LocalDate
@@ -43,25 +40,17 @@ import java.time.ZoneOffset
 fun BookingFilterBottomSheet(
     sheetState: SheetState,
     filterState: BookingFilterState,
-    serviceList: List<Service>,
     onNameFilterChanged: (String) -> Unit,
-    onServiceFilterChanged: (Service?) -> Unit,
+    onServiceFilterChanged: (String) -> Unit,
     onDateFilterChanged: (LocalDate?) -> Unit,
     onTimeFilterChanged: (String) -> Unit,
     onApplyFilters: () -> Unit,
     onClearFilters: () -> Unit,
     onDismiss: () -> Unit
 ) {
-    val focusManager = LocalFocusManager.current
-
-    // Limpar o foco ao abrir a folha para evitar que o TimeInput ganhe foco automático
-    LaunchedEffect(Unit) {
-        focusManager.clearFocus()
-    }
-
     ModalBottomSheet(
         onDismissRequest = { onDismiss() },
-        sheetState = sheetState
+        sheetState = sheetState,
     ) {
         Row(
             modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
@@ -106,11 +95,12 @@ fun BookingFilterBottomSheet(
                 onValueChanged = onNameFilterChanged
             )
 
-            SelectService(
-                serviceList = serviceList,
-                selectedService = filterState.service,
-                serviceError = null,
-                onServiceSelected = onServiceFilterChanged
+            TextInput(
+                value = filterState.serviceName,
+                valueError = null,
+                label = "Nome do Serviço",
+                leadingIcon = Icons.Default.ContentCut,
+                onValueChanged = onServiceFilterChanged
             )
 
             InlineDatePicker(
@@ -146,7 +136,6 @@ fun BookingFilterBottomSheetPreview() {
         BookingFilterBottomSheet(
             sheetState = sheetState,
             filterState = BookingFilterState(),
-            serviceList = emptyList(),
             onNameFilterChanged = {},
             onServiceFilterChanged = {},
             onDateFilterChanged = {},
