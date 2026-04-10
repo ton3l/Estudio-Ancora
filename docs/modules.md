@@ -12,29 +12,32 @@ The "heart" of the application. It contains all the logic that does not directly
     - `services/`: Business rules and orchestration (e.g., `BookingService`).
     - `libs/`: Infrastructure configurations (Firestore, DataStore).
     - `validators/`: Form and data validation logic.
-    - `core.states/`: Application state definitions (Sealed Interfaces and Data Classes).
+    - `states/`: Global application state definitions (Sealed Interfaces and Data Classes).
 - **Dependencies:** Firebase, Coroutines, DataStore.
 
 ### 2. `:shared` (Android Library)
-Resources and UI components that are reused by both the customer app and the admin app.
+Resources, UI components, and logic that are reused by both the customer app (`:app`) and the admin app (`:admin`).
 - **Responsibilities:**
-    - `views/`: Themes (Theme.kt), Colors (Color.kt), and Typography (Type.kt).
-    - `utils/`: Currency and date formatters, and visual transformations.
-    - Global Compose components.
+    - `views/`: Themes, Colors, and Typography.
+    - `utils/`: Currency and date formatters.
+    - `views/components/`: Global Compose components.
+    - `views/screens/`: Shared screens used in both apps (e.g., `BookingForm`).
+    - `views/viewModels/`: ViewModels associated with shared screens.
 - **Dependencies:** Depends on `:core` (via `api`) and Jetpack Compose.
 
 ### 3. `:app` (Android Application)
 The main application intended for the barbershop's customers.
 - **Responsibilities:**
-    - Booking, history, and customer profile screens.
-    - ViewModels specific to the customer journey.
+    - Customer-specific journey (e.g., personal booking history).
+    - Customer-specific UI components (e.g., `AppAvailableTimesHandler`).
 - **Dependencies:** Depends on `:shared`.
 
 ### 4. `:admin` (Android Application)
 The management application intended for the owner/administrator.
 - **Responsibilities:**
-    - Time management, general schedule view, and service configuration.
-    - ViewModels specific to administration.
+    - Administrative journey (e.g., management of all bookings, services, and business hours).
+    - Admin-specific UI components (e.g., `AdminAvailableTimesHandler`).
+    - **Test Centralization:** This module contains ALL the project's tests (Unit and Instrumented) to simplify the development and CI/CD environment.
 - **Dependencies:** Depends on `:shared`.
 
 ## Dependency Hierarchy
@@ -52,5 +55,5 @@ graph TD
 
 ## Benefits of this Structure
 1. **Isolation:** Changes in the admin UI do not affect the customer app.
-2. **Reuse:** All Firebase communication logic is in one place (`:core`).
-3. **Testability:** It is possible to test `:core` in isolation without loading UI libraries.
+2. **Reuse:** All Firebase communication logic is in one place (`:core`). Shared user flows are in `:shared`.
+3. **Testability:** It is possible to test `:core` and `:shared` logic through the tests centralized in `:admin`.
