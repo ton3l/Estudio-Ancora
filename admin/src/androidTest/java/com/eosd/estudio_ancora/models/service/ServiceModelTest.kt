@@ -21,26 +21,39 @@ class ServiceModelTest {
         Service(id = "test-service-1", name = "Test Service 1", price = 10.0, duration = 1),
         Service(id = "test-service-2", name = "Test Service 2", price = 20.0, duration = 2)
     )
+    private val additionalTestIds = mutableListOf<String>()
 
     @Before
-    fun setUp() = runBlocking {
-        // Clean and seed
-        cleanUp()
-        for (service in testServices) {
-            servicesCollection.document(service.id).set(ServiceDocument.toDocument(service)).await()
+    fun setUp() {
+        runBlocking {
+            // Clean and seed
+            additionalTestIds.clear()
+            cleanUp()
+            for (service in testServices) {
+                servicesCollection.document(service.id).set(ServiceDocument.toDocument(service)).await()
+            }
         }
     }
 
     @After
-    fun tearDown() = runBlocking {
-        cleanUp()
+    fun tearDown() {
+        runBlocking {
+            cleanUp()
+        }
     }
 
     private suspend fun cleanUp() {
+        // Clean fixed test services
         val snapshot = servicesCollection.whereIn("id", testServices.map { it.id }).get().await()
         for (doc in snapshot.documents) {
             doc.reference.delete().await()
         }
+
+        // Clean additional test services created during tests
+        additionalTestIds.forEach { id ->
+            servicesCollection.document(id).delete().await()
+        }
+        additionalTestIds.clear()
     }
 
     @Test
@@ -66,16 +79,15 @@ class ServiceModelTest {
     @Test
     fun addService_persistsNewService() {
         runBlocking {
-            val newService = Service(id = "test-add-service", name = "Added Service", price = 30.0, duration = 3)
+            val newServiceId = "test-add-service"
+            additionalTestIds.add(newServiceId)
+            val newService = Service(id = newServiceId, name = "Added Service", price = 30.0, duration = 3)
             ServiceModel.addService(newService)
 
             val retrieved = servicesCollection.document(newService.id).get().await().toObject(ServiceDocument::class.java)
             assertNotNull(retrieved)
             assertEquals("Added Service", retrieved?.name)
             assertEquals(30.0, retrieved?.price!!, 0.0)
-
-            // Cleanup
-            servicesCollection.document(newService.id).delete().await()
         }
     }
 

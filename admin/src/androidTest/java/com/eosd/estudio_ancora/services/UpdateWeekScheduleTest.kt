@@ -6,7 +6,10 @@ import com.eosd.estudio_ancora.models.booking.BookingModel
 import com.eosd.estudio_ancora.models.day.DayModel
 import com.eosd.estudio_ancora.models.day.dtos.WeekDayAvailableTimes
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.tasks.await
+import org.junit.After
 import org.junit.Assert.*
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import java.time.LocalDate
@@ -15,16 +18,49 @@ import java.time.LocalTime
 @RunWith(AndroidJUnit4::class)
 class UpdateWeekScheduleTest {
 
+    private val today = LocalDate.now()
+    private val weekdayName = today.dayOfWeek.toString().lowercase()
+    private var originalRule: WeekDayAvailableTimes? = null
+    
+    private val bookingIdKeep = "test-booking-keep"
+    private val bookingIdRemove = "test-booking-remove"
+
+    @Before
+    fun setUp() {
+        runBlocking {
+            // Save original rule to restore later
+            originalRule = DayModel.getAllWeekDayAvailableTimes().find { it.weekDay == weekdayName }
+            
+            // Clean up any potential leftover from previous failed runs
+            cleanUp()
+        }
+    }
+
+    @After
+    fun tearDown() {
+        runBlocking {
+            cleanUp()
+            
+            // Restore original rule
+            originalRule?.let {
+                DayModel.updateWeekDayAvailableTime(it)
+            }
+        }
+    }
+
+    private suspend fun cleanUp() {
+        if (DayModel.getBookingDay(today) != null) {
+            com.eosd.estudio_ancora.libs.firestore.collection("booking-days").document(today.toString()).delete().await()
+        }
+        
+        try { BookingModel.deleteBookingById(bookingIdKeep) } catch (e: Exception) {}
+        try { BookingModel.deleteBookingById(bookingIdRemove) } catch (e: Exception) {}
+    }
+
     @Test
     fun testUpdateCurrentWeekSchedules() = runBlocking {
-        val today = LocalDate.now()
-        val weekdayName = today.dayOfWeek.toString().lowercase()
-        
         val testCustomer = Customer("Test Client", "123456789")
         val testService = Service("1", "Barba", 1, 30.0)
-        
-        val bookingIdKeep = "test-booking-keep"
-        val bookingIdRemove = "test-booking-remove"
         
         val bookingKeep = Booking(
             id = bookingIdKeep,
@@ -93,9 +129,5 @@ class UpdateWeekScheduleTest {
         
         val retrievedRemove = try { BookingModel.getBooking(bookingIdRemove) } catch (e: Exception) { null }
         assertNull("Booking 11:00 should be DELETED from database", retrievedRemove)
-        
-        // Cleanup
-        BookingModel.deleteBookingById(bookingIdKeep)
-        // bookingRemove already deleted by service
     }
 }

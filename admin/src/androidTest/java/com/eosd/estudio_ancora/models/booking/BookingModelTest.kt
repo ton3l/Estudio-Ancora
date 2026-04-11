@@ -8,9 +8,11 @@ import com.eosd.estudio_ancora.libs.firestore
 import com.eosd.estudio_ancora.models.booking.dtos.BookingDocument
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.tasks.await
+import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import java.time.LocalDateTime
@@ -24,6 +26,23 @@ import java.util.UUID
 @RunWith(AndroidJUnit4::class)
 class BookingModelTest {
 
+    private val createdBookingIds = mutableListOf<String>()
+
+    @Before
+    fun setUp() {
+        createdBookingIds.clear()
+    }
+
+    @After
+    fun tearDown() {
+        runBlocking {
+            createdBookingIds.forEach { id ->
+                firestore.collection("bookings").document(id).delete().await()
+            }
+            createdBookingIds.clear()
+        }
+    }
+
     @Test
     fun createBooking_successfullyPersistsToFirestore() {
         runBlocking {
@@ -36,6 +55,7 @@ class BookingModelTest {
             )
 
             val testBookingId = UUID.randomUUID().toString()
+            createdBookingIds.add(testBookingId)
             val testBooking = Booking(
                 id = testBookingId,
                 customer = Customer(name = "John Doe", phoneNumber = "1234567890"),
@@ -78,6 +98,7 @@ class BookingModelTest {
         runBlocking {
             // Arrange
             val testBookingId = UUID.randomUUID().toString()
+            createdBookingIds.add(testBookingId)
             val testBooking = createTestBooking(testBookingId)
             BookingModel.createBooking(testBooking)
 
@@ -96,6 +117,8 @@ class BookingModelTest {
             // Arrange
             val id1 = UUID.randomUUID().toString()
             val id2 = UUID.randomUUID().toString()
+            createdBookingIds.add(id1)
+            createdBookingIds.add(id2)
             val b1 = createTestBooking(id1)
             val b2 = createTestBooking(id2)
             BookingModel.createBooking(b1)
@@ -116,6 +139,7 @@ class BookingModelTest {
         runBlocking {
             // Arrange
             val testBookingId = UUID.randomUUID().toString()
+            createdBookingIds.add(testBookingId)
             val testBooking = createTestBooking(testBookingId)
             BookingModel.createBooking(testBooking)
 
@@ -136,6 +160,7 @@ class BookingModelTest {
             val pastId = UUID.randomUUID().toString()
             val futureId1 = UUID.randomUUID().toString()
             val futureId2 = UUID.randomUUID().toString()
+            createdBookingIds.addAll(listOf(pastId, futureId1, futureId2))
             
             val pastBooking = createTestBooking(pastId).copy(dateTime = LocalDateTime.now().minusDays(1))
             val futureBooking1 = createTestBooking(futureId1).copy(dateTime = LocalDateTime.now().plusDays(2))
