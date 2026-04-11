@@ -2,10 +2,11 @@ package com.eosd.estudio_ancora.views.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
@@ -21,10 +22,10 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.eosd.estudio_ancora.domain.Booking
-import com.eosd.estudio_ancora.views.components.BookingSummary
-import com.eosd.estudio_ancora.views.viewModels.BookingHistoryViewModel
 import com.eosd.estudio_ancora.states.ActiveBookingsState
 import com.eosd.estudio_ancora.states.BookingFormState
+import com.eosd.estudio_ancora.views.components.BookingSummary
+import com.eosd.estudio_ancora.views.viewModels.BookingHistoryViewModel
 
 @Composable
 fun BookingHistory(
@@ -71,14 +72,14 @@ fun ActiveBookingsHandler(
         }
 
         is ActiveBookingsState.Success -> {
-            Column(
+            LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState()),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(24.dp),
             ) {
-                activeBookingsState.bookings.forEach { booking ->
+                items(activeBookingsState.bookings) { booking ->
                     BookingSummary(
                         actions = true,
                         onDeleteBooking = { onDeleteBooking(booking) },
@@ -90,6 +91,8 @@ fun ActiveBookingsHandler(
                         )
                     )
                 }
+
+
             }
         }
     }

@@ -25,16 +25,19 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.eosd.estudio_ancora.domain.Customer
 import com.eosd.estudio_ancora.domain.Service
+import com.eosd.estudio_ancora.shared.R
+import com.eosd.estudio_ancora.states.BookingFormState
 import com.eosd.estudio_ancora.views.utils.BrPhoneNumberVisualTransformation
 import com.eosd.estudio_ancora.views.utils.toCurrency
 import com.eosd.estudio_ancora.views.utils.toPtBrSplitText
-import com.eosd.estudio_ancora.states.BookingFormState
 import java.time.LocalDateTime
 
 @Composable
@@ -57,7 +60,7 @@ fun BookingSummary(
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             CardHeader(actions, bookingInfo.dateTime) { onDeleteBooking() }
-            CardBody(bookingInfo.customer, bookingInfo.service?.name ?: "")
+            CardBody(bookingInfo.customer, bookingInfo.service)
             CardFooter(actions, bookingInfo.service?.price ?: 0.0)
         }
     }
@@ -114,7 +117,7 @@ fun CardHeader(actions: Boolean, bookingDateTime: LocalDateTime, onDeleteBooking
 }
 
 @Composable
-fun CardBody(customer: Customer, serviceName: String = "") {
+fun CardBody(customer: Customer, service: Service?) {
     Column(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
@@ -123,8 +126,9 @@ fun CardBody(customer: Customer, serviceName: String = "") {
         ) {
             Text(
                 text = customer.name,
-                textAlign = TextAlign.Center,
-                fontSize = 14.sp
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 1,
+                modifier = Modifier.fillMaxWidth()
             )
             Text(
                 text = BrPhoneNumberVisualTransformation.filter(customer.phoneNumber),
@@ -132,10 +136,22 @@ fun CardBody(customer: Customer, serviceName: String = "") {
                 fontSize = 12.sp
             )
         }
-        Text(
-            text = serviceName,
-            textAlign = TextAlign.Center,
-        )
+        Column(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(
+                text = service?.name ?: "",
+                fontSize = 14.sp,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 1,
+                modifier = Modifier.fillMaxWidth()
+            )
+            Text(
+                text = if (service != null) pluralStringResource(R.plurals.numberOfDurationHours, service.duration, service.duration) else "",
+                textAlign = TextAlign.Center,
+                fontSize = 11.sp
+            )
+        }
     }
 }
 
@@ -186,7 +202,7 @@ fun BookingSummaryPreview() {
             service = Service(
                 id = "1",
                 name = "Corte de Cabelo",
-                duration = 60,
+                duration = 1,
                 price = 50.0
             )
         )

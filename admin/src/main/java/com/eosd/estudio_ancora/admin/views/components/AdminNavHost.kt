@@ -103,7 +103,7 @@ fun AdminApp() {
                             .padding(top = innerPadding.calculateTopPadding())
                             .padding(horizontal = 16.dp, vertical = 16.dp),
                         viewModel = sharedViewModel,
-                        onServiceBooked = {
+                        onSubmit = {
                             sharedViewModel.createBooking() {
                                 navController.navigate(AdminRoutes.ADMIN_LOGS) {
                                     popUpTo(AdminRoutes.BOOKING_FLOW) { inclusive = true }

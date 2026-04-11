@@ -34,7 +34,7 @@ fun AppButton(
         if (leadingIcon != null) leadingIcon()
         Text(
             modifier = if (leadingIcon != null) Modifier.padding(start = 8.dp) else Modifier,
-            text = text
+            text = text,
         )
     }
 }

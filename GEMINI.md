@@ -63,5 +63,6 @@ This project uses Gradle to manage dependencies and build the application.
 - **Code Cleanup:** Do not perform automatic code cleanup (e.g., removing unused imports, reformatting) unless explicitly requested by the user. If a need for cleanup is identified, alert the user instead of applying changes.
 - **Task Focus:** Focus strictly on the assigned task. For a task to be considered complete, all project tests must pass successfully.
 - **Testing Requirements:** Tests must always be generated for new features or modifications within the `:core` module. Existing documentation (especially `docs/testing.md`) must be reviewed before creating new tests to ensure consistency and compliance with established conventions.
+- **String Resources:** Ignore string resources (`res/values/strings.xml`) and use hardcoded strings directly in the UI code, unless explicitly instructed otherwise by the user.
 
 I'm new to Android development and to the Android ecosystem (Gradle, Compose, Material, etc.). This is my first real project using these technologies, and I want to learn and understand what I'm doing.

@@ -18,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -60,7 +61,7 @@ fun BookingForm(
             modifier = modifier
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             TextInput(
                 value = bookingFormState.customer.name,
@@ -81,8 +82,15 @@ fun BookingForm(
             BookingSummary(
                 actions = false,
                 modifier = Modifier
-                    .padding(vertical = 16.dp),
+                    .padding(top = 12.dp),
                 bookingInfo = bookingFormState
+            )
+            Text(
+                text = "* Horários sujeitos a atrasos.",
+                style = MaterialTheme.typography.bodySmall,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.error,
+                modifier = Modifier.padding(bottom = 8.dp)
             )
             Button(
                 onClick = {

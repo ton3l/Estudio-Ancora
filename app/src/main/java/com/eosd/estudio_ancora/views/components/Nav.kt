@@ -64,6 +64,12 @@ fun Nav(navController: NavController, modifier: Modifier = Modifier) {
                                 // Restaura o estado anterior (ex: se estava no formulário, volta para o formulário)
                                 restoreState = true
                             }
+                        } else if (route == Routes.BOOKING_FLOW) {
+                            // Alterna entre formulário e calendário se já estiver no fluxo de agendamento
+                            val currentRoute = currentDestination.route
+                            if (currentRoute == Routes.BOOKING_FORM) {
+                                navController.popBackStack()
+                            }
                         }
                     },
                     selected = selected,

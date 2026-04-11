@@ -1,3 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <plurals name="numberOfDurationHours">
+        <item quantity="one">Duração estimada: %d hora.</item>
+        <item quantity="other">Duração estimada: %d horas.</item>
+    </plurals>
 </resources>
