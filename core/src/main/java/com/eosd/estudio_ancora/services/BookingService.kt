@@ -41,9 +41,11 @@ object BookingService {
             }
 
             val updatedDay = dayEntity.bookTimeSlot(booking)
-
             transaction.set(dayRef, DayDocument.toDocument(updatedDay))
-            transaction.set(BookingModel.getBookingRef(booking.id), BookingDocument.toDocument(booking))
+            transaction.set(
+                BookingModel.getBookingRef(booking.id),
+                BookingDocument.toDocument(booking)
+            )
 
             null
         }.await()

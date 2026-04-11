@@ -10,6 +10,7 @@ import com.eosd.estudio_ancora.services.ServiceService
 import com.eosd.estudio_ancora.validators.BookingValidator
 import com.eosd.estudio_ancora.states.AvailableTimesState
 import com.eosd.estudio_ancora.states.BookingFormState
+import com.eosd.estudio_ancora.states.BookingState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -28,8 +29,8 @@ class BookingViewModel(application: Application) : AndroidViewModel(application)
     private val _serviceList = MutableStateFlow<List<Service>>(emptyList())
     val serviceList: StateFlow<List<Service>> = _serviceList.asStateFlow()
 
-    private val _isBooking = MutableStateFlow<Boolean>(false)
-    val isBooking: StateFlow<Boolean> = _isBooking.asStateFlow()
+    private val _bookingState = MutableStateFlow<BookingState>(BookingState.Idle)
+    val bookingState: StateFlow<BookingState> = _bookingState.asStateFlow()
 
     private val _bookingFormState = MutableStateFlow<BookingFormState>(BookingFormState())
     val bookingFormState = _bookingFormState.asStateFlow()
@@ -110,13 +111,17 @@ class BookingViewModel(application: Application) : AndroidViewModel(application)
         }
     }
 
+    fun resetBookingState() {
+        _bookingState.value = BookingState.Idle
+    }
+
     fun createBooking(onFinished: () -> Unit) {
         _bookingFormState.update { currentBookingFormState ->
             BookingValidator.validate(currentBookingFormState)
         }
         if (!_bookingFormState.value.isFormValid) return
 
-        _isBooking.value = true
+        _bookingState.value = BookingState.Loading
 
         viewModelScope.launch {
             try {
@@ -124,10 +129,12 @@ class BookingViewModel(application: Application) : AndroidViewModel(application)
                     context = getApplication(),
                     bookingInfo = bookingFormState.value
                 )
-                _isBooking.value = false
+                _bookingState.value = BookingState.Success
                 onFinished()
             } catch (e: Exception) {
-                throw e // TODO handle error
+                _bookingState.value = BookingState.Error(
+                    message = e.message ?: "Ocorreu um erro ao realizar o agendamento"
+                )
             }
         }
     }

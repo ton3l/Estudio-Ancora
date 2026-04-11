@@ -5,11 +5,15 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -18,23 +22,35 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Person
+import com.eosd.estudio_ancora.states.BookingState
 import com.eosd.estudio_ancora.views.components.BookingSummary
-import com.eosd.estudio_ancora.views.components.TextInput
 import com.eosd.estudio_ancora.views.components.PhoneNumberField
 import com.eosd.estudio_ancora.views.components.SelectService
+import com.eosd.estudio_ancora.views.components.TextInput
 import com.eosd.estudio_ancora.views.viewModels.BookingViewModel
 
 @Composable
 fun BookingForm(
     modifier: Modifier,
     viewModel: BookingViewModel = viewModel(),
-    onServiceBooked: () -> Unit = {},
+    onSubmit: () -> Unit = {},
 ) {
     val serviceList by viewModel.serviceList.collectAsStateWithLifecycle()
     val bookingFormState by viewModel.bookingFormState.collectAsStateWithLifecycle()
-    val isBooking by viewModel.isBooking.collectAsStateWithLifecycle()
+    val bookingState by viewModel.bookingState.collectAsStateWithLifecycle()
+
+    if (bookingState is BookingState.Error) {
+        AlertDialog(
+            onDismissRequest = { viewModel.resetBookingState() },
+            confirmButton = {
+                TextButton(onClick = { viewModel.resetBookingState() }) {
+                    Text("OK")
+                }
+            },
+            title = { Text("Erro no Agendamento") },
+            text = { Text((bookingState as BookingState.Error).message) }
+        )
+    }
 
     Surface(
         modifier = Modifier
@@ -70,9 +86,9 @@ fun BookingForm(
             )
             Button(
                 onClick = {
-                    onServiceBooked()
+                    onSubmit()
                 },
-                enabled = !isBooking,
+                enabled = bookingState !is BookingState.Loading,
                 modifier = Modifier,
                 shape = RoundedCornerShape(6.dp),
                 colors = ButtonDefaults.buttonColors(
