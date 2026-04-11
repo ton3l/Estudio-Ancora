@@ -11,7 +11,7 @@ import org.junit.runner.RunWith
 
 @Seeder
 @RunWith(AndroidJUnit4::class)
-class BookingSeederTest {
+class BookingSeeder {
 
     private lateinit var db: FirebaseFirestore
 

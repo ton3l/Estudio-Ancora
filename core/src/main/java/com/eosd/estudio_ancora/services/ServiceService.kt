@@ -8,6 +8,7 @@ import com.eosd.estudio_ancora.states.ServiceFormState
 object ServiceService {
     suspend fun getAllServices(): List<Service> {
         return ServiceModel.getAllServices()
+            .sortedBy { it.name }
     }
 
     suspend fun saveService(state: ServiceFormState) {

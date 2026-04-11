@@ -13,7 +13,7 @@ import java.time.LocalTime
 
 @Seeder
 @RunWith(AndroidJUnit4::class)
-class FirestoreSeederTest {
+class WeekAvailableTimesSeeder {
     lateinit var db: FirebaseFirestore
     val ids = arrayOf(
         "monday",

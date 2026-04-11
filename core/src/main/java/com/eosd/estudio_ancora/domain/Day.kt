@@ -11,7 +11,7 @@ data class Day(
         val targetTime = booking.dateTime.toLocalTime()
         val duration = booking.service.duration
         val startIndex = timeSlots.indexOfFirst { it.hour == targetTime }
-        val durationOutOfBoundsErrorMessage = "Duração do serviço ${booking.service.name} é maior do que a quantidade de horários disponíveis em sequência"
+        val durationOutOfBoundsErrorMessage = "Duração do serviço '${booking.service.name}' é maior do que a quantidade de horários disponíveis em sequência."
 
         if (startIndex == -1) {
             throw Exception("Horário inexistente $targetTime")
@@ -24,7 +24,7 @@ data class Day(
         val affectedSlots = timeSlots.subList(startIndex, startIndex + duration)
 
         if (affectedSlots.any { it.booked }) {
-            throw Exception("Horário atual ou dentro da duração do serviço ${booking.service.name} já reservado")
+            throw Exception("Horário atual ou dentro da duração do serviço '${booking.service.name}' já está reservado.")
         }
 
         val isContinuous = affectedSlots.zipWithNext { slot, nextSlot ->

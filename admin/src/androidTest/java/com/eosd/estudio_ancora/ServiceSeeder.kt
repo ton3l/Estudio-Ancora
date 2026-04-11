@@ -15,7 +15,7 @@ import org.junit.runners.MethodSorters
 @Seeder
 @RunWith(AndroidJUnit4::class)
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-class ServiceSeederTest {
+class ServiceSeeder {
 
     private lateinit var db: FirebaseFirestore
     private lateinit var servicesCollection: CollectionReference
@@ -32,10 +32,11 @@ class ServiceSeederTest {
 
         val services = listOf(
             hashMapOf("name" to "Corte de Cabelo", "duration" to 1, "price" to 25.0),
-            hashMapOf("name" to "Barba", "duration" to 1, "price" to 30.0),
-            hashMapOf("name" to "Corte e Barba", "duration" to 2, "price" to 75.0),
+            hashMapOf("name" to "Barba", "duration" to 1, "price" to 20.0),
+            hashMapOf("name" to "Corte e Barba", "duration" to 2, "price" to 35.0),
             hashMapOf("name" to "Sobrancelha", "duration" to 1, "price" to 15.0),
-            hashMapOf("name" to "Limpeza de Pele", "duration" to 4, "price" to 45.0)
+            hashMapOf("name" to "Corte, Barba e Sobrancelha", "duration" to 2, "price" to 45.0),
+            hashMapOf("name" to "Selagem", "duration" to 3, "price" to 70.0)
         )
 
         for (service in services) {

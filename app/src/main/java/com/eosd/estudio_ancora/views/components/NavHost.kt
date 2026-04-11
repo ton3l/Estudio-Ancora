@@ -115,7 +115,6 @@ fun App() {
                 BookingHistory(
                     modifier = Modifier
                         .padding(top = innerPadding.calculateTopPadding())
-                        .padding(top = 16.dp)
                         .padding(horizontal = 16.dp)
                 )
             }

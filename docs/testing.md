@@ -46,9 +46,25 @@ Specific tests exist in the `:admin` module designed to populate or clear the Fi
 ```
 
 ### Run a Specific Seeder (Dev environment)
+To run a seeder, you must explicitly include the `@Seeder` annotation filter, as they are excluded from the default test run for security.
+
+#### Via Command Line:
 ```bash
-./gradlew :admin:connectedDevDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=com.eosd.estudio_ancora.FirestoreSeederTest
+./gradlew :admin:connectedDevDebugAndroidTest \
+  -Pandroid.testInstrumentationRunnerArguments.annotation=com.eosd.estudio_ancora.utils.Seeder \
+  -Pandroid.testInstrumentationRunnerArguments.class=com.eosd.estudio_ancora.FirestoreSeederTest
 ```
+
+**Note:** The use of `\` is for Linux/Git Bash. For PowerShell use `` ` `` and for CMD use `^`.
+
+#### Via Android Studio (IDE):
+The easiest way to run seeders using the Android Studio interface (play button) is:
+1. Go to `admin/build.gradle.kts`.
+2. Temporarily comment out the line: `testInstrumentationRunnerArguments["notAnnotation"] = "com.eosd.estudio_ancora.utils.Seeder"`.
+3. Sync Gradle.
+4. Run the seeder class or method directly using the IDE's run icons.
+5. **Remember to uncomment the line after you are done** to restore the security measures.
+
 
 ## Automated Testing (Agent Guidelines)
 

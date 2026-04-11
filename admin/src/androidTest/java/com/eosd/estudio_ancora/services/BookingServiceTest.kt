@@ -36,7 +36,7 @@ class BookingServiceTest {
     fun addBooking_shouldUpdateDayStateAndCreateBookingRecord() = runBlocking {
         // 1. Arrange: Preparar os dados de teste
         val context = InstrumentationRegistry.getInstrumentation().targetContext
-        val testDate = LocalDateTime.now().minusYears(1000).withHour(20).withMinute(0).withSecond(0).withNano(0)
+        val testDate = LocalDateTime.now().plusDays(10).withHour(20).withMinute(0).withSecond(0).withNano(0)
         val testCustomer = Customer(name = "Cliente Teste", phoneNumber = "11999999999")
         val testService = Service(
             id = "test-service-id",
