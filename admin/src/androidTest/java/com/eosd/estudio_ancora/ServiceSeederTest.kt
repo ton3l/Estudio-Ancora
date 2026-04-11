@@ -1,6 +1,7 @@
 package com.eosd.estudio_ancora
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.eosd.estudio_ancora.utils.Seeder
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.runBlocking
@@ -11,6 +12,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.MethodSorters
 
+@Seeder
 @RunWith(AndroidJUnit4::class)
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 class ServiceSeederTest {

@@ -1,6 +1,7 @@
 package com.eosd.estudio_ancora
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.eosd.estudio_ancora.utils.Seeder
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.tasks.await
@@ -8,6 +9,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 
+@Seeder
 @RunWith(AndroidJUnit4::class)
 class BookingSeederTest {
 

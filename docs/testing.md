@@ -18,7 +18,7 @@ Focused on pure business logic, data mapping (DTOs), and validators. These run q
 
 ### Instrumented Tests (Android)
 
-Focused on integration with external infrastructure (Firebase Firestore) and local persistence (Jetpack DataStore). These run on an emulator or a physical device.
+Focused on integration with external infrastructure (Firebase Firestore) and local persistence (Jetpack DataStore). These run on an emulator or a physical device. **Tests are exclusively available and should only be run on the `dev` flavor.**
 
 - **Location:** `admin/src/androidTest/java/com/eosd/estudio_ancora/`
 - **Primary Areas Covered:**
@@ -27,7 +27,7 @@ Focused on integration with external infrastructure (Firebase Firestore) and loc
 
 ## Database Preparation (Seeders)
 
-Specific tests exist in the `:admin` module designed to populate or clear the Firestore database for development and testing purposes:
+Specific tests exist in the `:admin` module designed to populate or clear the Firestore database for development and testing purposes (**Only on `dev` flavor**):
 
 - **`FirestoreSeederTest`:** Populates the `week-available-times` collection with standard business hours.
 - **`ServiceSeederTest`:** Populates the `services` collection with default services.
@@ -40,18 +40,26 @@ Specific tests exist in the `:admin` module designed to populate or clear the Fi
 ./gradlew :admin:test
 ```
 
-### All Instrumented Tests
+### All Instrumented Tests (Dev environment)
 ```bash
-./gradlew :admin:connectedDebugAndroidTest
+./gradlew :admin:connectedDevDebugAndroidTest
 ```
 
-### Run a Specific Seeder
+### Run a Specific Seeder (Dev environment)
 ```bash
-./gradlew :admin:connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=com.eosd.estudio_ancora.FirestoreSeederTest
+./gradlew :admin:connectedDevDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=com.eosd.estudio_ancora.FirestoreSeederTest
 ```
+
+## Automated Testing (Agent Guidelines)
+
+- **Mandatory Attempt:** Instrumented tests (`./gradlew :admin:connectedDevDebugAndroidTest`) MUST always be attempted by the agent during the verification phase, even if it is uncertain whether a device or emulator is connected.
+- **Graceful Fallback:** If the instrumented tests fail (e.g., due to no device being found), the agent must proceed with the task by executing all available unit tests (`./gradlew test`).
+- **Reporting:** In case of failure to run instrumented tests due to device absence, the agent must explicitly inform the user at the end of the task that these tests were skipped for that reason.
+- **Seeder Restriction:** The agent MUST NOT execute any seeder (`FirestoreSeederTest`, `ServiceSeederTest`, `BookingSeederTest`). If the agent identifies that the database needs to be populated or reset to proceed with a task or test, it must stop the current task immediately and ask the user to perform the seeding manually.
 
 ## Testing Conventions
 
+- **Environment Restriction:** Instrumented tests and Seeders must NEVER be run against the production database. The project is configured to disable `androidTest` for the `prod` flavor to enforce this.
 - **Critical Restriction:** No test should EVER modify the `week-available-times` collection. This collection defines the base availability and changes to it can cause difficult-to-track errors across the entire test suite.
 - **Isolation:** Instrumented tests that modify the database (e.g., in `booking-days` or `bookings` collections) should clean their test data before (`@Before`) or after (`@After`) execution.
 - **Test Environment:** Ensure the database is configured for testing and isolated from production.

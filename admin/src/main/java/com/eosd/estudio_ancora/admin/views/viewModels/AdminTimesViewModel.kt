@@ -87,4 +87,17 @@ class AdminTimesViewModel : ViewModel() {
             }
         }
     }
+
+    fun updateCurrentWeek() {
+        viewModelScope.launch {
+            _isLoading.value = true
+            try {
+                DayService.updateCurrentWeekSchedules()
+            } catch (e: Exception) {
+                // Ignore
+            } finally {
+                _isLoading.value = false
+            }
+        }
+    }
 }

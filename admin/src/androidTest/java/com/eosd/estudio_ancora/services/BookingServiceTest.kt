@@ -4,12 +4,14 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.eosd.estudio_ancora.domain.Customer
 import com.eosd.estudio_ancora.domain.Service
+import com.eosd.estudio_ancora.libs.firestore
 import com.eosd.estudio_ancora.models.day.DayModel
 import com.eosd.estudio_ancora.states.BookingFormState
 import kotlinx.coroutines.runBlocking
-import org.junit.Assert.*
-import com.eosd.estudio_ancora.libs.firestore
 import kotlinx.coroutines.tasks.await
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertTrue
+import org.junit.Assert.fail
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -34,12 +36,12 @@ class BookingServiceTest {
     fun addBooking_shouldUpdateDayStateAndCreateBookingRecord() = runBlocking {
         // 1. Arrange: Preparar os dados de teste
         val context = InstrumentationRegistry.getInstrumentation().targetContext
-        val testDate = LocalDateTime.now().plusDays(10).withHour(20).withMinute(0).withSecond(0).withNano(0)
+        val testDate = LocalDateTime.now().minusYears(1000).withHour(20).withMinute(0).withSecond(0).withNano(0)
         val testCustomer = Customer(name = "Cliente Teste", phoneNumber = "11999999999")
         val testService = Service(
             id = "test-service-id",
             name = "Corte de Teste",
-            duration = 30,
+            duration = 1,
             price = 50.0
         )
 

@@ -55,8 +55,12 @@ object BookingModel {
     }
 
     suspend fun deleteBooking(booking: Booking) {
+        deleteBookingById(booking.id)
+    }
+
+    suspend fun deleteBookingById(bookingId: String) {
         bookingCollection
-            .document(booking.id)
+            .document(bookingId)
             .delete()
             .await()
     }

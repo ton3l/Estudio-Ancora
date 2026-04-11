@@ -17,6 +17,7 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunnerArguments["notAnnotation"] = "com.eosd.estudio_ancora.utils.Seeder"
     }
 
     buildTypes {
@@ -38,6 +39,24 @@ android {
     }
     buildFeatures {
         compose = true
+    }
+    flavorDimensions += "environment"
+    productFlavors {
+        create("dev") {
+            dimension = "environment"
+            applicationIdSuffix = ".dev"
+            versionNameSuffix = "-dev"
+            resValue("string", "app_name", "Estd-Âncora-Dev")
+        }
+        create("prod"){
+            dimension = "environment"
+        }
+    }
+}
+
+androidComponents {
+    beforeVariants(selector().withFlavor("environment" to "prod")) { variantBuilder ->
+        variantBuilder.androidTest.enable = false
     }
 }
 
