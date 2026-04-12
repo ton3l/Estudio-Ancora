@@ -12,13 +12,22 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.lifecycleScope
 import com.eosd.estudio_ancora.admin.views.components.AdminApp
+import com.eosd.estudio_ancora.services.AuthService
 import com.eosd.estudio_ancora.views.theme.Estudio_ancoraTheme
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        // Inicializa a autenticação anônima em background
+        lifecycleScope.launch {
+            AuthService.ensureAuthenticated()
+        }
+
         setContent {
             Estudio_ancoraTheme {
                 AdminApp()

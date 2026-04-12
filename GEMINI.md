@@ -25,6 +25,7 @@ The project follows a modified MVC pattern tailored for Jetpack Compose:
 - **Location:** Project documentation can be found in the `docs/` directory.
 - **Files:**
   - `architecture.md`: Details the modified MVC pattern (Domain, Models, Services, Views & Controllers) and the data flow.
+  - `auth.md`: Describes the anonymous authentication strategy, service implementation, and security rules.
   - `database.md`: Describes the Firestore structure (collections, schemas), denormalization strategies, and JIT initialization.
   - `modules.md`: Explains the project's multi-module architecture (`:core`, `:shared`, `:app`, `:admin`) and their responsibilities.
   - `project_structure.md`: Provides an overview of the directory structure and module organization.

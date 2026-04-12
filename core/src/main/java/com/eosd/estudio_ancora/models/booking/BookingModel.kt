@@ -3,9 +3,9 @@ package com.eosd.estudio_ancora.models.booking
 import com.eosd.estudio_ancora.domain.Booking
 import com.eosd.estudio_ancora.libs.firestore
 import com.eosd.estudio_ancora.models.booking.dtos.BookingDocument
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.Query
-import com.google.firebase.Timestamp
 import com.google.firebase.firestore.toObject
 import com.google.firebase.firestore.toObjects
 import kotlinx.coroutines.tasks.await

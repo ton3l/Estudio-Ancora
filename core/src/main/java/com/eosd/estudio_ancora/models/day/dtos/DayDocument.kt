@@ -1,9 +1,11 @@
 package com.eosd.estudio_ancora.models.day.dtos
 
+import androidx.annotation.Keep
 import com.eosd.estudio_ancora.domain.Day
 import com.google.firebase.firestore.DocumentId
 import java.time.LocalDate
 
+@Keep
 data class DayDocument(
     @DocumentId
     val date: String = "undefined",

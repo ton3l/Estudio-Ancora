@@ -64,6 +64,7 @@ estudio_ancora/
 │                   └── viewModels/ # ViewModels for shared screens
 ├── docs/                   # Project documentation
 │   ├── architecture.md
+│   ├── auth.md
 │   ├── database.md
 │   ├── modules.md
 │   ├── project_structure.md

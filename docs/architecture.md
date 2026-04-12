@@ -41,6 +41,13 @@ To maximize reuse between the `:app` and `:admin` modules, the project follows a
 1. **Shared Screens/ViewModels:** Located in the `:shared` module, these provide the core layout and logic for common user flows (like booking).
 2. **Module-Specific Child Components:** Shared screens can accept Composable child functions (lambda parameters). This allows the `:app` module to use one type of visualization (e.g., `AppAvailableTimesHandler`) while the `:admin` module uses another (e.g., `AdminAvailableTimesHandler`), while keeping the surrounding logic identical.
 
+## 5. Authentication
+The project uses **Firebase Anonymous Authentication** as a cross-cutting concern.
+
+- **Frictionless Login:** Authentication is handled automatically at app startup (`MainActivity`).
+- **Lazy Security:** Public read access is permitted for performance, while write operations (in **Services**) are gated by `AuthService.ensureAuthenticated()`.
+- **UID Tracking:** Each user is assigned a unique anonymous ID, allowing for future features like personalized booking history.
+
 ## Common Data Flow
 1. **View** detects a click -> calls the **ViewModel (Controller)**.
 2. **ViewModel** calls the corresponding **Service**.

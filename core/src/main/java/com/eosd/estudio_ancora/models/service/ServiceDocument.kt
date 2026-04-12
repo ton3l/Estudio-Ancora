@@ -1,8 +1,10 @@
 package com.eosd.estudio_ancora.models.service
 
+import androidx.annotation.Keep
 import com.eosd.estudio_ancora.domain.Service
 import com.google.firebase.firestore.DocumentId
 
+@Keep
 data class ServiceDocument(
     @DocumentId
     val id: String = "",

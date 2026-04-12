@@ -1,7 +1,9 @@
 package com.eosd.estudio_ancora.domain
 
+import androidx.annotation.Keep
 import java.time.LocalDate
 
+@Keep
 data class Day(
     val date: LocalDate,
     val timeSlots: List<TimeSlot>,

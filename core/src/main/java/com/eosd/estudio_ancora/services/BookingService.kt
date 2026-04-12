@@ -20,6 +20,7 @@ import java.time.LocalDateTime
 
 object BookingService {
     suspend fun addBooking(context: Context, bookingInfo: BookingFormState) {
+        AuthService.ensureAuthenticated()
         val booking = Booking(
             id = generateFirestoreId(),
             customer = bookingInfo.customer,
@@ -27,7 +28,7 @@ object BookingService {
             service = bookingInfo.service!!
         )
 
-        firestore.runTransaction { transaction ->
+        firestore.runTransaction { transaction -> //TODO mover transaction para Model
             val date = booking.dateTime.toLocalDate()
             val dayRef = DayModel.getDayRef(date)
             val daySnapshot = transaction.get(dayRef)
@@ -70,7 +71,8 @@ object BookingService {
     }
 
     suspend fun deleteBookingByAdmin(booking: Booking) {
-        firestore.runTransaction { transaction ->
+        AuthService.ensureAuthenticated()
+        firestore.runTransaction { transaction -> //TODO mover transaction para Model
             val date = booking.dateTime.toLocalDate()
             val dayRef = DayModel.getDayRef(date)
             val daySnapshot = transaction.get(dayRef)
@@ -90,6 +92,7 @@ object BookingService {
     }
 
     suspend fun deleteBooking(context: Context, booking: Booking) {
+        AuthService.ensureAuthenticated()
         firestore.runTransaction { transaction ->
             val date = booking.dateTime.toLocalDate()
             val dayRef = DayModel.getDayRef(date)

@@ -1,3 +1,1 @@
-# Add project specific consumer ProGuard rules here.
-# For more details, see
-# http://developer.android.com/guide/developing/tools/proguard/index.html
+# Regras do ProGuard específicas para o módulo shared (vazio por enquanto)

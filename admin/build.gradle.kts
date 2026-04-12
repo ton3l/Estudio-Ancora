@@ -20,9 +20,19 @@ android {
         testInstrumentationRunnerArguments["notAnnotation"] = "com.eosd.estudio_ancora.utils.Seeder"
     }
 
+    signingConfigs {
+        create("release") {
+            storeFile = file(project.property("ADMIN_APP_KEYSTORE") as String)
+            storePassword = project.property("ADMIN_APP_KEY_STORE_PASSWORD") as String
+            keyAlias = project.property("ADMIN_APP_KEY") as String
+            keyPassword = project.property("ADMIN_APP_KEY_PASSWORD") as String
+        }
+    }
+
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            signingConfig = signingConfigs.getByName("release")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"

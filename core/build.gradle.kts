@@ -41,7 +41,7 @@ dependencies {
     implementation(libs.firebase.firestore)
     implementation(libs.androidx.datastore.preferences)
     coreLibraryDesugaring(libs.desugar.jdk.libs)
-    
+    implementation(libs.google.firebase.auth)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

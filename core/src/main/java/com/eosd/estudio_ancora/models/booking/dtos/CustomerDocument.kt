@@ -1,7 +1,9 @@
 package com.eosd.estudio_ancora.models.booking.dtos
 
+import androidx.annotation.Keep
 import com.eosd.estudio_ancora.domain.Customer
 
+@Keep
 data class CustomerDocument(
     val name: String = "undefined",
     val phoneNumber: String = "undefined",

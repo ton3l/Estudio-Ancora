@@ -1,8 +1,10 @@
 package com.eosd.estudio_ancora.models.day.dtos
 
+import androidx.annotation.Keep
 import com.eosd.estudio_ancora.domain.TimeSlot
 import java.time.LocalTime
 
+@Keep
 data class TimeSlotDocument(
     val booked: Boolean = false,
     val bookingId: String = ""

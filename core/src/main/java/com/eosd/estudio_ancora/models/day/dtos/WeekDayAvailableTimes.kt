@@ -1,11 +1,13 @@
 package com.eosd.estudio_ancora.models.day.dtos
 
+import androidx.annotation.Keep
 import com.eosd.estudio_ancora.domain.Day
 import com.eosd.estudio_ancora.domain.TimeSlot
 import com.google.firebase.firestore.DocumentId
 import java.time.LocalDate
 import java.time.LocalTime
 
+@Keep
 data class WeekDayAvailableTimes(
     @DocumentId
     val weekDay: String = "undefined",
